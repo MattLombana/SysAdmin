@@ -1,0 +1,8 @@
+---
+#
+# Add and enable repositories on the appliance
+#
+
+- name: add repo "{{ item }}"
+  shell: rpm -ivh "{{ item }}"
+  with_items: "{{ repos }}"
