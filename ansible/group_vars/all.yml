@@ -26,3 +26,18 @@ vim_plugins:
   - http://github.com/severin-lemaignan/vim-minimap
   - http://github.com/airblade/vim-gitgutter
   - http://github.com/scrooloose/nerdcommenter
+
+
+active_directory:
+  domain: example.com
+  realm: EXAMPLE
+  domain_controller:
+    name: dc
+    ip: 10.20.30.40
+  credentials:
+    username: Administrator
+    password: Password1!
+
+
+
+become_pass: Password1!

@@ -1,0 +1,12 @@
+[sssd]
+services = nss, pam
+config_file_version = 2
+domains = {{ active_directory['domain']|upper }}
+
+[domain/{{ active_directory['domain']|upper }}]
+id_provider = ad
+access_provider = ad
+
+ldap_id_mapping = true
+override_homedir = /home/%u
+default_shell = /bin/bash

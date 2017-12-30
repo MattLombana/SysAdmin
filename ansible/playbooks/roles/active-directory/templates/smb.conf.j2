@@ -1,0 +1,17 @@
+[global]
+    security = ADS
+    realm = {{ active_directory['domain']|upper }}
+    #NOTE: Workgroup is the NetBIOS name (short name)
+    workgroup = {{ active_directory['realm'] }}
+    idmap uid = 10000-20000
+    idmap gid = 10000-20000
+    winbind enum users = yes
+    winbind enum groups = yes
+    template homedir = /home/%U
+    template shell = /bin/bash
+    client use spnego = yes
+    client signing = yes
+    kerberos method = secrets and keytab
+    encrypt passwords = yes
+    winbind use default domain = yes
+    restrict anonymous = 2

@@ -1,0 +1,103 @@
+---
+#
+# Enroll a machine in Active Directory
+#
+
+- name: install packages
+  package:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - krb5-user
+    - samba
+    - sssd
+    - ntp
+
+- name: configure kerberos-1
+  lineinfile:
+    path: /etc/krb5.conf
+    line: '[libdefaults]'
+    insertbefore: BOF
+
+- name: configure kerberos-2
+  lineinfile:
+    path: /etc/krb5.conf
+    regexp: 'default_realm =.*'
+    line: "default_realm = {{ active_directory['domain']|upper }}"
+    insertafter: '^[libdefaults]$'
+
+- name: configure kerberos-3
+  lineinfile:
+    path: /etc/krb5.conf
+    regexp: 'ticket_lifetime =.*'
+    line: 'ticket_lifetime = 24h'
+    insertafter: "default_realm = {{ active_directory['domain']|upper }}"
+
+- name: configure kerberos-4
+  lineinfile:
+    path: /etc/krb5.conf
+    regexp: 'renew_lifetime =.*'
+    line: 'renew_lifetime = 7d'
+    insertafter: 'ticket_lifetime = 24h'
+
+- name: configure ntp
+  lineinfile:
+    path: /etc/ntp.conf
+    line: "server {{ active_directory['domain_controller']['name']}}.{{ active_directory['domain'] }}"
+    insertafter: EOF
+
+- name: configure samba
+  template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+
+- name: create sssd config directory
+  file: path=/etc/sssd state=directory
+
+- name: create sssd config file
+  template:
+    src: sssd.conf.j2
+    dest: /etc/sssd/sssd.conf
+    group: root
+    owner: root
+    mode: 0600
+
+- name: configure hosts
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }} {{ inventory_hostname }} {{ inventory_hostname }}.{{ active_directory['domain'] }} "
+    insertafter: EOF
+
+- name: Restart services
+  service: name={{item}} state=restarted
+  with_items:
+    - ntp
+    - smbd
+    - nmbd
+
+- name: obtain a kerberos ticket
+  shell: echo "{{active_directory['credentials']['password']}}" | kinit {{active_directory['credentials']['username']}}
+  args:
+    executable: /bin/bash
+
+- name: join the domain
+  shell: net ads join -k
+  args:
+    executable: /bin/bash
+
+- name: start sssd
+  service: name={{item}} state=restarted
+  with_items:
+    - sssd
+
+- name: set up home directories
+  lineinfile:
+    path: /etc/pam.d/common-session
+    line: 'session    required    pam_mkhomedir.so skel=/etc/skel/ umask=0022'
+    insertafter: 'session required pam_unix.so'
+
+- name: set up sudoers groups
+  lineinfile:
+    path: /etc/sudoers
+    line: '%super-users ALL=(ALL) ALL'
+

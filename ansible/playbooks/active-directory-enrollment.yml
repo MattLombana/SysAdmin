@@ -1,0 +1,13 @@
+---
+#
+# Playbook to enroll a machine in active directory
+#
+
+- hosts: all
+  gather_facts: true
+  vars_files:
+    - ../group_vars/all.yml
+    - ../group_vars/all.local.yml
+  roles:
+    - { role: active-directory, become: yes, become_user: root, become_method: sudo}
+
