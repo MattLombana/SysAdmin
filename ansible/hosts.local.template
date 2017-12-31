@@ -10,3 +10,7 @@ server002-metasploitable
 [workstations]
 kali-linux-desktop
 fedora24-workstation.domain.local
+
+
+[domain-members]
+domain-example ansible_user=foo ansible_become=true ansible_become_pass='Password1!'

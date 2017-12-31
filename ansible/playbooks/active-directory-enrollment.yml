@@ -3,7 +3,7 @@
 # Playbook to enroll a machine in active directory
 #
 
-- hosts: all
+- hosts: domain-members
   gather_facts: true
   vars_files:
     - ../group_vars/all.yml

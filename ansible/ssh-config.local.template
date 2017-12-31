@@ -38,3 +38,10 @@ Host fedora24-workstation.domain.local
     IdentityFile ~/.ssh/id_rsa
     StrictHostKeyChecking no
     UserKnownHostsFile=/dev/null
+
+
+Host domain-example
+    Hostname 11.22.33.44
+    IdentityFile ~/.ssh/id_rsa
+    StrictHostKeyChecking no
+    UserKnownHostsFile=/dev/null
