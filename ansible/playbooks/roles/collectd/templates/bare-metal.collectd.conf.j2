@@ -1,0 +1,79 @@
+Hostname "{{ inventory_hostname }}"
+FQDNLookup true
+Interval {{ collectd_interval }}
+
+LoadPlugin syslog
+
+<Plugin syslog>
+	LogLevel info
+</Plugin>
+
+LoadPlugin cpu
+LoadPlugin cpufreq
+LoadPlugin df
+LoadPlugin disk
+LoadPlugin dns
+LoadPlugin hddtemp
+LoadPlugin interface
+LoadPlugin load
+LoadPlugin memory
+LoadPlugin numa
+LoadPlugin ping
+LoadPlugin processes
+LoadPlugin smart
+LoadPlugin swap
+LoadPlugin turbostat
+loadPlugin uptime
+LoadPlugin users
+LoadPlugin write_graphite
+
+<Plugin df>
+	ValuesPercentage true
+</Plugin>
+
+<Plugin disk>
+    Disk "/^[hsv]d[a-z]+[0-9]?$/"
+    IgnoreSelected false
+</Plugin>
+
+<Plugin hddtemp>
+	Host "127.0.0.1"
+	Port 7634
+</Plugin>
+
+<Plugin ping>
+    Host "domain000.homelab.hackingserver.com"
+    Host "domain001.homelab.hackingserver.com"
+    Interval 5.0
+    Timeout 1.0
+    TTL 255
+    MaxMissed -1
+</Plugin>
+
+<Plugin smart>
+    Disk "/^[hsv]d[a-z]+[0-9]?$/"
+    IgnoreSelected false
+</Plugin>
+
+<Plugin swap>
+    ReportBytes true
+    ValuesPercentage true
+</Plugin>
+
+<Plugin write_graphite>
+    <Node "logging">
+        Host "logging.homelab.hackingserver.com"
+        Port "2003"
+        Protocol "tcp"
+        LogSendErrors true
+        Prefix "{{ carbon_host_prefix }}"
+        StoreRates true
+        AlwaysAppendDS false
+        EscapeCharacter "_"
+    </Node>
+</Plugin>
+
+<Include "/etc/collectd/collectd.conf.d">
+	Filter "*.conf"
+</Include>
+

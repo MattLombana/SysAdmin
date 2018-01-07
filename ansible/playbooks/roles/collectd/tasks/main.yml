@@ -1,0 +1,25 @@
+---
+#
+# Install and configure collectd
+#
+ 
+- name: install packages
+  package:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - hddtemp
+    - libpcap-dev
+    - collectd
+    - collectd-utils
+
+- name: Configure collectd.conf
+  template:
+    src={{config_type}}.collectd.conf.j2
+    dest=/etc/collectd/collectd.conf
+    owner=root
+    group=root
+    mode=0644
+
+- name: Start collectd
+  service: name=collectd state=restarted enabled=true
