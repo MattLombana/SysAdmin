@@ -3,6 +3,7 @@
 # Script to automatically download all VMs from https://www.vulnhub.com/
 
 import logging
+import math
 import os
 import requests
 import sys
@@ -12,6 +13,7 @@ from bs4 import BeautifulSoup
 
 DOWNLOAD_DIR = "/mnt/Archive/VulnHub"
 BASE_URL = 'https://www.vulnhub.com'
+VMS_PER_PAGE = 10
 
 
 def is_number(s):
@@ -66,7 +68,10 @@ def get_page_vms(page_url):
         a = title.find('a')
         vm_url = BASE_URL + a['href']
         vm_name = a.text.replace('/', '-')
-        vms.append((vm_name, vm_url))
+        vm_num = vm_url.split(',')[-1].replace('/', '')
+        if not is_number(vm_num):
+            vm_num = '000'
+        vms.append((vm_name, vm_url, vm_num))
     return vms
 
 
@@ -235,12 +240,8 @@ def download_vm_screenshots(vm_directory, vm_info):
         download_file(os.path.join(screenshot_directory, filename), url)
 
 
-def download_vm(vm_name, url):
+def download_vm(vm_name, url, num):
     logging.info('Starting to download {}'.format(vm_name))
-
-    num = url.split(',')[-1].replace('/', '')
-    if not is_number(num):
-        num = '000'
 
     vm_info = get_vm_info(vm_name, url)
 
@@ -278,18 +279,45 @@ def main():
     # Accumulator to keep track of the urls for all vms
     all_urls = []
 
-    # Get number of pages
+    # Get total number of pages
     num_pages = get_num_pages(BASE_URL)
 
-    # for each page in range 0..num_pages
-    for page in range(1, num_pages + 1):
+    # Find the most recent vm downloaded
+    latest_vm = 0
+    most_recent_file = os.path.join(DOWNLOAD_DIR, 'most_recent')
+    if os.path.isfile(most_recent_file):
+        try:
+            with open(most_recent_file, 'r') as f:
+                latest_vm = int(f.readline())
+        except:
+            latest_vm = 0
+
+    # find the largest page that needs to be checked
+    largest_page = math.ceil((num_pages + 1) - (latest_vm / VMS_PER_PAGE))
+    if largest_page > num_pages:
+        largest_page = num_pages
+
+    # for each page in range 1..largest_page
+    for page in range(1, largest_page + 1):
         # get list of urls on that page, and add it to the running total
         all_urls += get_page_vms(BASE_URL + '/?page=' + str(page))
 
-    for name, url in all_urls:
-        print(name)
-        # download the vm
-        download_vm(name, url)
+    largest_downloaded = latest_vm
+
+    for name, url, number_s in all_urls:
+        number = int(number_s)
+        if number <= latest_vm:
+            break
+        download_vm(name, url, number_s)
+        if number > largest_downloaded:
+            largest_downloaded = number
+
+    # Update the 'most recent' file
+    with open(most_recent_file, 'w') as f:
+        f.write(str(largest_downloaded))
+
+
+
 
 
 
