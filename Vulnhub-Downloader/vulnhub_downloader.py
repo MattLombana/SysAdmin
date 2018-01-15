@@ -308,7 +308,10 @@ def main():
         number = int(number_s)
         if number <= latest_vm:
             continue
-        download_vm(name, url, number_s)
+        try:
+            download_vm(name, url, number_s)
+        except:
+            logging.warning('VM {} FAILED TO DOWNLOAD! URL: {} NUMBER: {}'.format(name, url, number_s))
         if number > largest_downloaded:
             largest_downloaded = number
 
