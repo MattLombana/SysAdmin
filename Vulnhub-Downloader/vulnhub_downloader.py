@@ -11,7 +11,7 @@ import time
 import urllib.request
 from bs4 import BeautifulSoup
 
-DOWNLOAD_DIR = "/mnt/Archive/VulnHub"
+DOWNLOAD_DIR = "/mnt/Archive/Vulnhub"
 BASE_URL = 'https://www.vulnhub.com'
 VMS_PER_PAGE = 10
 
