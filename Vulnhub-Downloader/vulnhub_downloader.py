@@ -69,8 +69,11 @@ def get_page_vms(page_url):
         vm_url = BASE_URL + a['href']
         vm_name = a.text.replace('/', '-')
         vm_num = vm_url.split(',')[-1].replace('/', '')
-        if not is_number(vm_num):
+        if is_number(vm_num):
+            vm_num = vm_num.zfill(3)
+        else:
             vm_num = '000'
+
         vms.append((vm_name, vm_url, vm_num))
     return vms
 
