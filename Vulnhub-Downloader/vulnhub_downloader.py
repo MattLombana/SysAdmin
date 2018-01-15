@@ -304,10 +304,10 @@ def main():
 
     largest_downloaded = latest_vm
 
-    for name, url, number_s in all_urls:
+    for name, url, number_s in all_urls[::-1]:
         number = int(number_s)
         if number <= latest_vm:
-            break
+            continue
         download_vm(name, url, number_s)
         if number > largest_downloaded:
             largest_downloaded = number
