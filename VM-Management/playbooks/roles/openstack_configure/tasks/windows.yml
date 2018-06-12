@@ -1,0 +1,15 @@
+---
+#
+#
+#
+
+
+- name: Create Windows Users
+  win_user:
+    groups_action: add
+    groups: "{{ item.groups }}"
+    name: "{{ item.username }}"
+    password: "{{ item.password }}"
+    password_never_expires: true
+  with_items: "{{ users.windows_users }}"
+

@@ -38,6 +38,68 @@ active_directory:
     username: Administrator
     password: Password1!
 
-
-
 become_pass: Password1!
+
+
+
+
+
+# Openstack Machines to provision
+provision_list:
+  - name: unixExample1
+    image: "ubuntu-cloud-16.04"
+    flavor: "c8.xlarge"
+    key: "default-keypair"
+    nics: "net-name=private-network"
+    terminate_volume: true
+    security_groups:
+      - "default"
+    floating_ip_pools:
+      - "public-network"
+    meta:
+      default_user: ubuntu
+      groups:
+        - os_unix_hosts
+  - name: windowsExample1
+    image: "Windows Server 2012 R2"
+    flavor: "c2.small"
+    key: "default-keypair"
+    nics: "net-name=private-network"
+    terminate_volume: true
+    security_groups:
+      - "default"
+    floating_ip_pools:
+      - "public-network"
+    meta:
+      default_user: Administrator
+      groups:
+        - os_windows_hosts
+
+
+
+
+# Openstack lab machine users
+users:
+  unix_users:
+    - username: exampleUser1
+      # password is Password1234!
+      password: '$6$2QafErWNr1z$r1CPLPoqPjCceKxjdXQLDWS2zsOcwj8y8kAvyXihzmTSHrVEenvheFPTbmJzIbBLwLoJqYgBBZxZTFySXYg.d/'
+      groups: []
+    - username: exapleUser2
+      # password is Password1234!
+      password: '$6$2QafErWNr1z$r1CPLPoqPjCceKxjdXQLDWS2zsOcwj8y8kAvyXihzmTSHrVEenvheFPTbmJzIbBLwLoJqYgBBZxZTFySXYg.d/'
+      groups:
+        - sudo
+
+  windows_users:
+    - username: exampleUser3
+      password: 'Password1234!'
+      groups: []
+    - username: exampleUser4
+      password: 'Password1234!'
+      groups:
+        - "Power Users"
+    - username: exampleUser5
+      password: 'Password1234!'
+      groups:
+        - Administrators

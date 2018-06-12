@@ -1,0 +1,13 @@
+---
+#
+#
+#
+
+
+- name: Create Unix Users
+  user:
+    append: true
+    groups: "{{ item.groups }}"
+    name: "{{ item.username }}"
+    password: "{{ item.password }}"
+  with_items: "{{ users.unix_users }}"

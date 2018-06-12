@@ -1,0 +1,27 @@
+---
+#
+#
+#
+
+- name: Launch Instances
+  os_server:
+    name: "{{ item.name }}"
+    state: present
+    key_name: "{{ item.key }}"
+    nics: "{{ item.nics }}"
+    image: "{{ item.image }}"
+    flavor: "{{ item.flavor }}"
+    boot_from_volume: true
+    security_groups: "{{ item.security_groups }}"
+    floating_ip_pools: "{{ item.floating_ip_pools }}"
+    terminate_volume: "{{ item.terminate_volume }}"
+  with_items: "{{ provision_list }}"
+  register: "os_hosts"
+
+- name: Register  Instances
+  add_host:
+    name: "{{ item['item']['name'] }}"
+    groups: "{{ item['item']['meta']['groups'] }}"
+    ansible_host: "{{ item.openstack.accessIPv4 }}"
+    ansible_user: "{{ item['item']['meta']['default_user'] }}"
+  with_items: "{{ os_hosts.results }}"

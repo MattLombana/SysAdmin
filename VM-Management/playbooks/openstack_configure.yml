@@ -1,0 +1,12 @@
+- name: Configure Openstack Instances
+  hosts:
+    - os_unix_hosts
+    - os_windows_hosts
+  gather_facts: true
+  vars:
+    ansible_python_interpreter: '/usr/bin/python3'
+  vars_files:
+    - ../group_vars/all.yml
+    - ../group_vars/all.local.yml
+  roles:
+    - { role: openstack_configure, become: true }
