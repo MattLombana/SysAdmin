@@ -21,41 +21,52 @@ active_directory:
 #####################################################################################################
 #                                      Collectd configuration                                       #
 #####################################################################################################
-carbon_host_prefix: collectd.
-collectd_interval: 10
+collectd:
+  graphite_prefix: collectd.
+  collectd_interval: 10
+  ping_hosts:
+    - host1.example.com
+    - host2.example.com
+  graphite_host: logging.example.com
 
 #####################################################################################################
 #                                      Openstack configuration                                      #
 #####################################################################################################
-provision_list:
-  - name: unixExample1
-    image: "ubuntu-cloud-16.04"
-    flavor: "c8.xlarge"
-    key: "default-keypair"
-    nics: "net-name=private-network"
-    terminate_volume: true
-    security_groups:
-      - "default"
-    floating_ip_pools:
-      - "public-network"
-    meta:
-      default_user: ubuntu
-      groups:
-        - os_unix_hosts
-  - name: windowsExample1
-    image: "Windows Server 2012 R2"
-    flavor: "c2.small"
-    key: "default-keypair"
-    nics: "net-name=private-network"
-    terminate_volume: true
-    security_groups:
-      - "default"
-    floating_ip_pools:
-      - "public-network"
-    meta:
-      default_user: Administrator
-      groups:
-        - os_windows_hosts
+openstack:
+  provision_list:
+    - name: unixExample1
+      image: "ubuntu-cloud-16.04"
+      flavor: "c8.xlarge"
+      key: "default-keypair"
+      nics: "net-name=private-network"
+      terminate_volume: true
+      security_groups:
+        - "default"
+      floating_ip_pools:
+        - "public-network"
+      meta:
+        default_user: ubuntu
+        groups:
+          - os_unix_hosts
+    - name: windowsExample1
+      image: "Windows Server 2012 R2"
+      flavor: "c2.small"
+      key: "default-keypair"
+      nics: "net-name=private-network"
+      terminate_volume: true
+      security_groups:
+        - "default"
+      floating_ip_pools:
+        - "public-network"
+      meta:
+        default_user: Administrator
+        groups:
+          - os_windows_hosts
+
+
+#####################################################################################################
+#                                         User configuration                                        #
+#####################################################################################################
 users:
   unix_users:
     - username: exampleUser1
@@ -87,15 +98,15 @@ proxmox:
   username: root@pam
   password: toor
   hostname: proxmox.example.com
-proxmox_provision_list:
-  - name: examplevm
-    node: node1
-    image_source: Ubuntu-16.04-Template
-    storage: local-lvm
-    cores: 2
-    sockets: 2
-    memory: 4096
-    meta:
-      default_user: ubuntu
-      groups:
-        - proxmox_unix_hosts
+  provision_list:
+    - name: examplevm
+      node: node1
+      image_source: Ubuntu-16.04-Template
+      storage: local-lvm
+      cores: 2
+      sockets: 2
+      memory: 4096
+      meta:
+        default_user: ubuntu
+        groups:
+          - proxmox_unix_hosts

@@ -15,7 +15,7 @@
     security_groups: "{{ item.security_groups }}"
     floating_ip_pools: "{{ item.floating_ip_pools }}"
     terminate_volume: "{{ item.terminate_volume }}"
-  with_items: "{{ provision_list }}"
+  with_items: "{{ openstack.provision_list }}"
   register: "os_hosts"
 
 - name: Register  Instances

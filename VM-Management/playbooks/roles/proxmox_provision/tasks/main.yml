@@ -17,5 +17,5 @@
     cores: "{{ item.cores }}"
     sockets: "{{ item.sockets }}"
     memory: "{{ item.memory }}"
-  with_items: "{{ proxmox_provision_list }}"
+  with_items: "{{ proxmox.provision_list }}"
 

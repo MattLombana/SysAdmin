@@ -3,7 +3,6 @@
 #
 #
 
-
 - name: Create Unix Users
   user:
     append: true

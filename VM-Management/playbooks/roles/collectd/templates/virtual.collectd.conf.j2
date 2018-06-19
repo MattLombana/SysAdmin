@@ -1,6 +1,6 @@
 Hostname "{{ inventory_hostname }}"
 FQDNLookup true
-Interval {{ collectd_interval }}
+Interval {{ collectd.collectd_interval }}
 
 LoadPlugin syslog
 
@@ -35,8 +35,9 @@ LoadPlugin write_graphite
 </Plugin>
 
 <Plugin ping>
-    Host "domain000.homelab.hackingserver.com"
-    Host "domain001.homelab.hackingserver.com"
+    {% for host in collectd.ping_hosts %}
+    Host "{{ host }}"
+    {% endfor %}
     Interval 5.0
     Timeout 1.0
     TTL 255
@@ -51,11 +52,11 @@ LoadPlugin write_graphite
 
 <Plugin write_graphite>
     <Node "logging">
-        Host "logging.homelab.hackingserver.com"
+        Host "{{ collectd.graphite_host }}"
         Port "2003"
         Protocol "tcp"
         LogSendErrors true
-        Prefix "{{ carbon_host_prefix }}"
+        Prefix "{{ collectd.graphite_prefix }}"
         StoreRates true
         AlwaysAppendDS false
         EscapeCharacter "_"
