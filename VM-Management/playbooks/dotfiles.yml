@@ -1,0 +1,23 @@
+---
+#
+# Ansible playbook to setup and configure dotfiles
+#
+
+# Install Dotfiles for standard user
+- hosts: unix-hosts
+  gather_facts: true
+  vars_files:
+    - ../group_vars/all.yml
+    - ../group_vars/all.local.yml
+  roles:
+    - dotfiles
+
+# Now do it for root
+- hosts: unix-hosts
+  gather_facts: true
+  become: true
+  vars_files:
+    - ../group_vars/all.yml
+    - ../group_vars/all.local.yml
+  roles:
+    - dotfiles

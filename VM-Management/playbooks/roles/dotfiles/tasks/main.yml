@@ -1,0 +1,51 @@
+---
+#
+# Install Dotfiles
+#
+
+- name: Clone Dotfiles Repo
+  git:
+    repo: "{{ dotfiles_repo }}"
+    dest: "/home/{{ ansible_user_id }}/dotfiles"
+
+- name: Run MakeSymLinks
+  shell: "/home/{{ ansible_user_id }}/dotfiles/makesymlinks.sh"
+  args:
+    chdir: "/home/{{ ansible_user_id }}/dotfiles/"
+
+- name: "Configure YouCompleteMe (Install Prerequisites)"
+  package:
+    name: "{{ item }}"
+    state: present
+  become: true
+  with_items:
+    - build-essential
+    - cmake
+    - python-dev
+    - python3-dev
+
+- name: "Configure YouCompleteMe (Submodule Init)"
+  shell: "git submodule update --init --recursive"
+  args:
+    chdir: "/home/{{ ansible_user_id }}/.vim/bundle/YouCompleteMe/"
+
+- name: "Configure YouCompleteMe (Install)"
+  shell: "/home/{{ ansible_user_id }}/.vim/bundle/YouCompleteMe/install.py"
+  args:
+    chdir: "/home/{{ ansible_user_id }}/.vim/bundle/YouCompleteMe/"
+
+- name: Install Ctags
+  apt:
+    name: exuberant-ctags
+    state: present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Install Ruby
+  package:
+    name: ruby
+    state: present
+
+- name: Install Teamocil
+  gem:
+    name: teamocil
+    state: present

@@ -1,0 +1,21 @@
+---
+#
+# Playbook to provision proxmox instances
+#
+
+- name: Provision Proxmox Instances
+  hosts: proxmox-nodes
+  gather_facts: false
+  vars_files:
+    - ../group_vars/all.yml
+    - ../group_vars/all.local.yml
+  roles:
+    - { role: proxmox_provision }
+
+- name: Messages to user
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - debug:
+        msg: "MAKE SURE TO ADD THESE NEW VMS TO YOUR MACHINE's SSH CONFIG, HOSTS.LOCAL, AND/OR SSH-CONFIG.LOCAL"
+
