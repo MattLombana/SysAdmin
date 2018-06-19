@@ -1,33 +1,13 @@
 # File used to configure settings
-ssh_ password: toor
-server-repos:
-  - epel: http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
-  - rpmfusion-free: http://download1.rpmfusion.org/free/el/updates/6/i386/rpmfusion-free-release-6-1.noarch.rpm
-  - rpmfusion-nonfree: http://download1.rpmfusion.org/nonfree/el/updates/6/i386/rpmfusion-nonfree-release-6-1.noarch.rpm
-workstation-repos:
-  - negativo: http://negativo17.org/repos/fedora-negativo17.repo
-  - rpmfusion-free: http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-24.noarch.rpm
-  - rpmfusion-nonfree: http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-24.noarch.rpm
-vim_plugins:
-  - http://github.com/jistr/vim-nerdtree-tabs
-  - http://github.com/majutshushi/tagbar
-  - http://github.com/alvan/closetag
-  - http://github.com/JamshedVesuna/vim-markdown-preview
-  - http://github.com/tpope/vim-surround
-  - http://github.com/nvie/vim-flake8
-  - http://github.com/trusktr/seti.vim
-  - http://github.com/Valloric/YouCompleteMe
-  - http://github.com/davidhalter/jedi-vim
-  - http://github.com/davidhalter/jedi
-  - http://github.com/mbbill/undotree
-  - http://github.com/scrooloose/nerdtree
-  - http://github.com/csexton/trailertrash.vim
-  - http://github.com/scrooloose/syntastic
-  - http://github.com/severin-lemaignan/vim-minimap
-  - http://github.com/airblade/vim-gitgutter
-  - http://github.com/scrooloose/nerdcommenter
 
+#####################################################################################################
+#                                      Dotfiles configuration                                       #
+#####################################################################################################
+dotfiles_repo: http://github.com/example/dotfiles.git
 
+#####################################################################################################
+#                                      Active Directory configuration                               #
+#####################################################################################################
 active_directory:
   domain: example.com
   realm: EXAMPLE
@@ -38,13 +18,15 @@ active_directory:
     username: Administrator
     password: Password1!
 
-become_pass: Password1!
+#####################################################################################################
+#                                      Collectd configuration                                       #
+#####################################################################################################
+carbon_host_prefix: collectd.
+collectd_interval: 10
 
-
-
-
-
-# Openstack Machines to provision
+#####################################################################################################
+#                                      Openstack configuration                                      #
+#####################################################################################################
 provision_list:
   - name: unixExample1
     image: "ubuntu-cloud-16.04"
@@ -74,11 +56,6 @@ provision_list:
       default_user: Administrator
       groups:
         - os_windows_hosts
-
-
-
-
-# Openstack lab machine users
 users:
   unix_users:
     - username: exampleUser1
@@ -90,7 +67,6 @@ users:
       password: '$6$2QafErWNr1z$r1CPLPoqPjCceKxjdXQLDWS2zsOcwj8y8kAvyXihzmTSHrVEenvheFPTbmJzIbBLwLoJqYgBBZxZTFySXYg.d/'
       groups:
         - sudo
-
   windows_users:
     - username: exampleUser3
       password: 'Password1234!'
@@ -103,3 +79,23 @@ users:
       password: 'Password1234!'
       groups:
         - Administrators
+
+#####################################################################################################
+#                                      Proxmox configuration                                        #
+#####################################################################################################
+proxmox:
+  username: root@pam
+  password: toor
+  hostname: proxmox.example.com
+proxmox_provision_list:
+  - name: examplevm
+    node: node1
+    image_source: Ubuntu-16.04-Template
+    storage: local-lvm
+    cores: 2
+    sockets: 2
+    memory: 4096
+    meta:
+      default_user: ubuntu
+      groups:
+        - proxmox_unix_hosts
