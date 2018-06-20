@@ -4,27 +4,31 @@ ansible_user=administrator
 ansible_become_pass='Password1!'
 
 
-# Machines to be enrolled in active directory
+# Playbooks:
+#   - active-directory-enrollment
 [domain-members]
-domain-example ansible_become=true
 
 
-# Machines for collectd
+# Playbooks:
+#   - collectd
 [bare-metal-servers]
-baremetal000
-baremetal001
 
+
+# Playbooks:
+#   - collectd
 [virtual-servers]
-virtual000
-virtual001
 
 
+# Playbooks:
+#   - Proxmox_provision
+[proxmox-nodes]
 
-# Deprecated
-# Server hostnames which you wish to configure
-[servers]
-server001-management
 
-# Workstation machines that you want to configure
-[workstations]
-desktop-linux
+# Playbooks:
+#   - dotfiles
+[unix-hosts]
+
+
+# Playbooks:
+#   - configure_kali
+[kali-hosts]

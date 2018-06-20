@@ -1,0 +1,13 @@
+---
+#
+# Enroll a machine in Active Directory
+#
+
+- name: Unix Enrollment
+  import_tasks: unix.yml
+  when:
+    ansible_distribution == "Debian" or ansible_distribution == "Ubuntu" or ansible_distribution == "CentOS" or ansible_distribution == "Fedora"
+
+- name: Windows Enrollment
+  import_tasks: windows.yml
+  when: ansible_distribution == "Windows"

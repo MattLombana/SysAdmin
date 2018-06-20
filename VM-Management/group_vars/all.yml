@@ -110,3 +110,25 @@ proxmox:
         default_user: ubuntu
         groups:
           - proxmox_unix_hosts
+
+
+#####################################################################################################
+#                                        Kali configuration                                         #
+#####################################################################################################
+kali:
+  user:
+    username: user1
+    # password is Password1234!
+    password: '$6$2QafErWNr1z$r1CPLPoqPjCceKxjdXQLDWS2zsOcwj8y8kAvyXihzmTSHrVEenvheFPTbmJzIbBLwLoJqYgBBZxZTFySXYg.d/'
+  ssh:
+    port: 22
+  packages:
+    - kali-linux-all
+  tools:
+    - name: Empire
+      repo: https://github.com/EmpireProject/Empire.git
+    - name: Deathstar
+      repo: https://github.com/byt3bl33d3r/DeathStar.git
+    - name: BloodHound
+      repo: https://github.com/BloodHoundAD/BloodHound.git
+

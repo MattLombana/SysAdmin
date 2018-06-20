@@ -9,5 +9,5 @@
     - ../group_vars/all.yml
     - ../group_vars/all.local.yml
   roles:
-    - { role: active-directory, become: yes, become_user: root, become_method: sudo}
+    - { role: active-directory-enrollment, become: yes, become_user: root, become_method: sudo}
 

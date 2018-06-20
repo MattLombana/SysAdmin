@@ -1,6 +1,6 @@
 ---
 #
-# Enroll a machine in Active Directory
+# Enroll a Unix machine in Active Directory
 #
 
 - name: install packages
