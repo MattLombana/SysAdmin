@@ -30,5 +30,10 @@ ansible_become_pass='Password1!'
 
 
 # Playbooks:
+#   - update
+[windows-hosts]
+
+
+# Playbooks:
 #   - configure_kali
 [kali-hosts]
