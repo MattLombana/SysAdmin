@@ -1,0 +1,75 @@
+---
+#
+# Tasks for configuring Kali Linux
+#
+
+- name: Update and Upgrade
+  apt:
+    upgrade: true
+    update_cache: true
+
+- name: Upgrade Dist
+  apt:
+    upgrade: dist
+
+- name: Install Kali Packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ kali.packages }}"
+
+- name: Install extra tools
+  git:
+    repo: "{{ item.repo }}"
+    dest: "/opt/{{ item.name }}"
+  with_items: "{{ kali.tools }}"
+
+- name: Download ngrok
+  get_url:
+    url: "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip"
+    dest: "/tmp/ngrok.zip"
+
+- name: Install ngrok
+  unarchive:
+    src: "/tmp/ngrok.zip"
+    dest: "/usr/local/bin/ngrok"
+    creates: "/usr/local/bin/ngrok"
+    copy: false
+
+- name: Configure ngrok
+  file:
+    path: "/usr/local/bin/ngrok"
+    mode: 0755
+    state: file
+
+- name: Create new user
+  user:
+    append: true
+    groups: sudo
+    name: "{{ kali.user.username }}"
+    password: "{{ kali.user.password }}"
+
+- name: Add ssh key to root
+  authorized_key:
+    user: root
+    state: present
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+- name: Add ssh key to new user
+  authorized_key:
+    user: "{{ kali.user.username }}"
+    state: present
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+- name: Configure SSH
+  template:
+    src=sshd_config.j2
+    dest=/etc/ssh/sshd_config
+    owner=root
+    group=root
+    mode=0644
+
+- name: restart ssh
+  service:
+    name: sshd
+    state: restarted
