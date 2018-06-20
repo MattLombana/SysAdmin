@@ -1,6 +1,6 @@
 ---
 #
-# Tasks for configuring Kali Linux
+# Tasks for updating machines
 #
 
 - name: Update and Upgrade Debian/Ubuntu
@@ -22,3 +22,20 @@
     state: latest
   when: ansible_distribution == "Fedora"
 
+- name: Update and Upgrade Windows
+  win_updates:
+    category_names:
+      - Application
+      - Connectors
+      - CriticalUpdates
+      - DefinitionUpdates
+      - DeveloperKits
+      - FeaturePacks
+      - Guidance
+      - SecurityUpdates
+      - ServicePacks
+      - Tools
+      - UpdateRollups
+      - Updates
+    reboot: true
+  when: ansible_distribution == "Windows"

@@ -1,10 +1,12 @@
 ---
 #
-# Ansible playbook to update all packages on Unix systems
+# Ansible playbook to update all packages
 #
 
 - name: Update Unix Hosts
-  hosts: unix-hosts
+  hosts:
+    - unix-hosts
+    - windows-hosts
   gather_facts: true
   become: true
   vars_files:
