@@ -1,0 +1,13 @@
+---
+#
+# Ansible playbook to update all packages on Unix systems
+#
+
+- hosts: unix-hosts
+  gather_facts: true
+  vars_files:
+    - ../group_vars/all.yml
+    - ../group_vars/all.local.yml
+  roles:
+    - update
+
