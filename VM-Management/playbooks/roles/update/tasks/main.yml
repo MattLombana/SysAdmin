@@ -13,6 +13,7 @@
   yum:
     name: '*'
     state: latest
+    update_only: true
   when: ansible_distribution == "CentOS"
 
 - name: Upgrade Fedora

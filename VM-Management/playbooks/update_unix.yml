@@ -3,8 +3,10 @@
 # Ansible playbook to update all packages on Unix systems
 #
 
-- hosts: unix-hosts
+- name: Update Unix Hosts
+  hosts: unix-hosts
   gather_facts: true
+  become: true
   vars_files:
     - ../group_vars/all.yml
     - ../group_vars/all.local.yml
