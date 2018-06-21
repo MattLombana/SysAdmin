@@ -1,0 +1,183 @@
+---
+#
+# Tasks to add a rule to iptables
+#
+
+#####################################################################################################
+#                                       Incoming Connections                                        #
+#####################################################################################################
+- name: Add allow incoming port rules
+  become: true
+  iptables:
+    table: filter
+    chain: INPUT
+    protocol: "{{ item.protocol }}"
+    destinataion_port: "{{ item.port }}"
+    ctstate:
+      - NEW
+      - ESTABLISHED
+    jump: ACCEPT
+  with_items: "{{ iptables.allow_incoming_ports }}"
+
+
+- name: Add deny incoming port rules
+  become: true
+  iptables:
+    table: filter
+    chain: INPUT
+    protocol: "{{ item.protocol }}"
+    destinataion_port: "{{ item.port }}"
+    jump: "{{ item.action }}"
+  with_items: "{{ iptables.deny_incoming_ports }}"
+
+
+- name: Add redirect incoming port rules
+  become: true
+  iptables:
+    table: nat
+    chain: PREROUTING
+    protocol: "{{ item.protocol }}"
+    destinataion_port: "{{ item.incoming_port }}"
+    jump: REDIRECT
+    to_port: "{{ item.redirect_port }}"
+  with_items: "{{ iptables.redirect_incoming_ports }}"
+
+
+- name: Add allow incoming host rules
+  become: true
+  iptables:
+    table: filter
+    chain: INPUT
+    source: "{{ item }}"
+    ctstate:
+      - NEW
+      - ESTABLISHED
+    jump: ACCEPT
+  with_items: "{{ iptables.allow_incoming_hosts }}"
+
+
+- name: Add deny incoming host rules
+  become: true
+  iptables:
+    table: filter
+    chain: INPUT
+    source: "{{ item.source }}"
+    ctstate:
+      - NEW
+      - ESTABLISHED
+    jump: "{{ item.action }}"
+  with_items: "{{ iptables.deny_incoming_hosts }}"
+
+- name: Add allow specific incoming connection rules
+  become: true
+  iptables:
+    table: filter
+    chain: INPUT
+    source: "{{ item.source }}"
+    protocol: "{{ item.protocol }}"
+    destinataion_port: "{{ item.port }}"
+    ctstate:
+      - NEW
+      - ESTABLISHED
+    jump: ACCEPT
+  with_items: "{{ iptables.allow_specific_incoming_connection }}"
+
+- name: Add deny specific incoming connection rules
+  become: true
+  iptables:
+    table: filter
+    chain: INPUT
+    source: "{{ item.source }}"
+    protocol: "{{ item.protocol }}"
+    destinataion_port: "{{ item.port }}"
+    ctstate:
+      - NEW
+      - ESTABLISHED
+    jump: "{{ item.action }}"
+  with_items: "{{ iptables.deny_specific_incoming_connection }}"
+
+
+
+#####################################################################################################
+#                                       Outgoing Connections                                        #
+#####################################################################################################
+- name: Add allow outgoing port rules
+  become: true
+  iptables:
+    table: filter
+    chain: OUTPUT
+    protocol: "{{ item.protocol }}"
+    destinataion_port: "{{ item.port }}"
+    jump: ACCEPT
+  with_items: "{{ iptables.allow_outgoing_ports }}"
+
+
+- name: Add deny outgoing port rules
+  become: true
+  iptables:
+    table: filter
+    chain: OUTPUT
+    protocol: "{{ item.protocol }}"
+    destinataion_port: "{{ item.port }}"
+    jump: "{{ item.action }}"
+  with_items: "{{ iptables.deny_outgoing_ports }}"
+
+- name: Add redirect outgoing port rules
+  become: true
+  iptables:
+    table: nat
+    chain: POSTROUTING
+    protocol: "{{ item.protocol }}"
+    destinataion_port: "{{ item.outgoing_port }}"
+    jump: REDIRECT
+    to_port: "{{ item.redirect_port }}"
+  with_items: "{{ iptables.redirect_outgoing_ports }}"
+
+- name: Add allow outgoing host rules
+  become: true
+  iptables:
+    table: filter
+    chain: OUTPUT
+    destination: "{{ item }}"
+    jump: ACCEPT
+  with_items: "{{ iptables.allow_outgoing_hosts }}"
+
+- name: Add deny outgoing host rules
+  become: true
+  iptables:
+    table: filter
+    chain: OUTPUT
+    destination: "{{ item.destination }}"
+    jump: "{{ item.action }}"
+  with_items: "{{ iptables.deny_outgoing_hosts }}"
+
+- name: Add allow specific outgoing connection rules
+  become: true
+  iptables:
+    table: filter
+    chain: OUTPUT
+    destination: "{{ item.destination }}"
+    protocol: "{{ item.protocol }}"
+    destinataion_port: "{{ item.port }}"
+    jump: ACCEPT
+  with_items: "{{ iptables.allow_specific_outgoing_connection }}"
+
+- name: Add deny specific outgoing connection rules
+  become: true
+  iptables:
+    table: filter
+    chain: OUTPUT
+    destination: "{{ item.destination }}"
+    protocol: "{{ item.protocol }}"
+    destinataion_port: "{{ item.port }}"
+    jump: "{{ item.action }}"
+  with_items: "{{ iptables.deny_specific_outgoing_connection }}"
+
+
+- name: Ensure iptables-persistent is installed
+  package:
+    name: iptables-persistent
+    state: present
+
+- name: Save Rules
+  command: "iptables-save > /etc/iptables/rules.v4"

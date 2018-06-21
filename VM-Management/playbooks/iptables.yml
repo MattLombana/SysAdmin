@@ -1,0 +1,16 @@
+---
+#
+# Ansible playbook to add or remove IP table rules
+#
+
+- name: Add iptables rules
+  hosts:
+    - unix-hosts
+  gather_facts: false
+  vars_files:
+    - ../group_vars/all.yml
+    - ../group_vars/all.local.yml
+  roles:
+    - iptables
+
+
