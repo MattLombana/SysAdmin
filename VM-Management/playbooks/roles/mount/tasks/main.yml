@@ -1,0 +1,25 @@
+---
+#
+# Mount A device
+#
+
+- name: Create PW File
+  become: true
+  template:
+    src: pwfile.conf.j2
+    dest: "{{ item.credentials.pwfile }}"
+    owner: root
+    group: root
+    mode: 0600
+  with_items: "{{ mount }}"
+  when: item.credentials is defined
+
+- name: Mount Share
+  become: true
+  mount:
+    src: "{{ item.share }}"
+    path: "{{ item.directory }}"
+    opts: "uid={{ item.options.uid }},gid={{ item.options.gid }}{{ ',credentials='+item.credentials.pwfile if item.credentials is defined else '' }}{{ ','+item.options.other if item.options.other is defined else '' }}"
+    fstype: "{{ item.fstype }}"
+    state: mounted
+  with_items: "{{ mount }}"

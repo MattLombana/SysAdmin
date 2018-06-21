@@ -148,3 +148,19 @@ kali:
     - name: BloodHound
       repo: https://github.com/BloodHoundAD/BloodHound.git
 
+
+#####################################################################################################
+#                                        Mount configuration                                        #
+#####################################################################################################
+mount:
+  - share: "//fileserver.example.com/Files"
+    directory: "/mnt/Files"
+    options:
+      uid: root
+      gid: root
+      other: 'ro' # optional, can be left out or empty
+    fstype: cifs
+    credentials: # optional, can be left out
+      username: 'user1'
+      password: 'pw1'
+      pwfile: '/root/.examplepwfile'
