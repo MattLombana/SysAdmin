@@ -1,0 +1,4 @@
+- name: Configure SSH_CLIENT variable forwarding for sudo
+  lineinfile:
+    path: /etc/sudoers
+    line: 'Defaults env_keep += "SSH_CLIENT"'
