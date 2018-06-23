@@ -12,6 +12,10 @@
   apt:
     upgrade: dist
 
+- name: Set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+
 - name: Install Kali Packages
   apt:
     name: "{{ item }}"
@@ -48,6 +52,21 @@
     groups: sudo
     name: "{{ kali.user.username }}"
     password: "{{ kali.user.password }}"
+
+- name: Add Powershell Signing Key
+  apt_key:
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    state: present
+
+- name: Add Powershell Repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-stretch-prod stretch main"
+    state: present
+
+- name: Install Powershell
+  apt:
+    name: powershell
+    update_cache: true
 
 - name: Add ssh key to root
   authorized_key:

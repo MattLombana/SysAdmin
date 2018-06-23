@@ -140,6 +140,7 @@ kali:
     port: 22
   packages:
     - kali-linux-all
+    - veil
   tools:
     - name: Empire
       repo: https://github.com/EmpireProject/Empire.git
@@ -147,6 +148,20 @@ kali:
       repo: https://github.com/byt3bl33d3r/DeathStar.git
     - name: BloodHound
       repo: https://github.com/BloodHoundAD/BloodHound.git
+    - name: Webshells
+      repo: https://github.com/BlackArch/webshells.git
+    - name: CrackMapExec
+      repo: https://github.com/byt3bl33d3r/CrackMapExec.git
+    - name: Merlin
+      repo: https://github.com/Ne0nd0g/merlin.git
+    - name: Powersploit
+      repo: https://github.com/PowerShellMafia/PowerSploit.git
+    - name: PayloadsAllTheThings
+      repo: https://github.com/swisskyrepo/PayloadsAllTheThings.git
+    - name: MalleableC2Profiles
+      repo: https://github.com/rsmudge/Malleable-C2-Profiles.git
+    - name: ImPacket
+      repo: https://github.com/CoreSecurity/impacket.git
 
 
 #####################################################################################################
