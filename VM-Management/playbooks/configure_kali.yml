@@ -14,6 +14,3 @@
     - configure_kali
     - dotfiles
     - sudoers
-  ansible_user: root
-  ansible_ssh_pass: toor
-
