@@ -30,7 +30,6 @@ def main():
     parser.add_argument('lines', help='Strings to make into header', nargs='+')
 
     args = parser.parse_args()
-    print(args)
 
     width = args.w  # width
     commentchar = args.c  # commentchar
