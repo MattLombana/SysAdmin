@@ -1,0 +1,103 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LaTeX Example: Project Report                                       %
+%                                                                     %
+% Source: http://www.howtotex.com                                     %
+%                                                                     %
+% Feel free to distribute this example, but please keep the referral  %
+% to howtotex.com                                                     %
+% Date: March 2011                                                    %
+%                                                                     %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Preamble
+\documentclass[paper=a4, fontsize=11pt]{scrartcl}
+\usepackage[T1]{fontenc}
+\usepackage{fourier}
+\usepackage[english]{babel}								% English language/hyphenation
+\usepackage[protrusion=true,expansion=true]{microtype}
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage[pdftex]{graphicx}
+\usepackage{url}
+
+
+%%% Custom sectioning
+\usepackage{sectsty}
+\allsectionsfont{\centering \normalfont\scshape}
+
+
+%%% Custom headers/footers (fancyhdr package)
+\usepackage{fancyhdr}
+\pagestyle{fancyplain}
+\fancyhead{}											% No page header
+\fancyfoot[L]{}											% Empty
+\fancyfoot[C]{}											% Empty
+\fancyfoot[R]{\thepage}									% Pagenumbering
+\renewcommand{\headrulewidth}{0pt}			% Remove header underlines
+\renewcommand{\footrulewidth}{0pt}				% Remove footer underlines
+\setlength{\headheight}{13.6pt}
+
+
+%%% Equation and float numbering
+\numberwithin{equation}{section}		% Equationnumbering: section.eq#
+\numberwithin{figure}{section}			% Figurenumbering: section.fig#
+\numberwithin{table}{section}				% Tablenumbering: section.tab#
+
+%%% Code Formatting
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Bash,
+    aboveskip=3mm,
+  belowskip=3mm,
+    showstringspaces=false,
+  columns=flexible,
+    basicstyle={\small\ttfamily},
+  numbers=left,
+    numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+    commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+    breaklines=true,
+  breakatwhitespace=true,
+    tabsize=4
+}
+
+%%% Column Formatting
+\usepackage{multicol}
+
+
+%%% Links
+\usepackage{hyperref}
+\hypersetup{colorlinks,
+    citecolor=black,
+    filecolor=green,
+    linkcolor=black,
+    urlcolor=blue,
+}
+%%% Maketitle metadata
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} 	% Horizontal rule
+
+\title{\usefont{OT1}{bch}{b}{n}
+		\horrule{0.5pt} \\[0.4cm]
+		\huge Template Paper: An Example\\
+		\horrule{2pt} \\[0.5cm]
+}
+\author{\normalfont\normalsize
+        Example Person\\[-3pt]		\normalsize
+        \today
+}
+\date{}
+
+
+%%% Begin document
+\begin{document}
+\maketitle
+
+
+%%% End document
+\end{document}
