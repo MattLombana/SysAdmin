@@ -9,7 +9,9 @@
 \usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
 \usepackage{lastpage}
 \usepackage{enumerate}
+\usepackage{enumitem}
 \usepackage{mathrsfs}
+\usepackage{multicol}
 \usepackage[english]{babel}								% English language/hyphenation
 \usepackage[protrusion=true,expansion=true]{microtype}  % Interword-spacing
 \usepackage{amsmath,amsfonts,amsthm}                    % Math packages
@@ -34,12 +36,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                        Custom Sectioning                                         %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \usepackage{sectsty}
 \allsectionsfont{\raggedright \normalfont \scshape}
 \sectionfont{\bfseries}
 \subsectionfont{\bfseries}
 \subsubsectionfont{\bfseries}
 
+\renewcommand\thesection{Problem \arabic{section}}
+\renewcommand\thesubsection{\alph{subsection}}
+\renewcommand\thesubsubsection{\roman{subsubsection}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                   Equation and Float Numbering                                   %
@@ -124,6 +130,53 @@
 \fancyhead[R]{\course \\ \today}						% Course and Date in top right
 \fancyfoot[R]{\small \thepage}							% Page Number in bottom right
 \headsep 4em                                            % Include 4em to separate the header
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                         Custom Numbering                                         %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newenvironment{enumalpha}
+	{
+	\begin{enumerate}[label=\alph*)]
+	}
+	{
+	\end{enumerate}
+	}
+\newenvironment{enumroman}
+	{
+	\begin{enumerate}[label=\roman*)]
+	}
+	{
+	\end{enumerate}
+	}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                   Problem and Solution Format                                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newenvironment{problem}
+    {
+    \section{}
+    \begin{center}
+    \begin{itshape}
+    \begin{tabular}{|p{0.99\textwidth}|}
+    \hline
+    }
+    {
+    \\\hline
+    \end{tabular}
+    \end{itshape}
+    \end{center}
+	\newpage
+    }
+
+\newenvironment{solution}[1]
+    {
+    \section*{Solution #1}
+    }
+    {
+	\newpage
+    }
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
