@@ -102,6 +102,34 @@
   tabsize=4
 }
 
+\lstdefinestyle{text}{                               % Define a text style for lstlistings
+  frame=tb,
+  mathescape=true,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+
+\lstdefinestyle{pseudocode}{                               % Define a text style for lstlistings
+  frame=tb,
+  mathescape=true,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  keywords={,input, output, return, datatype, function, in, if, then, else, foreach, while, begin, end, break, skip, continue}
+  keywordstyle=\bfseries,
+  basicstyle={\small\ttfamily},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4,
+}
+
 % Code sample using lstlisting
 %\lstset{caption={A simple for loop in python}}
 %    \lstset{label={lst:alg1}}
