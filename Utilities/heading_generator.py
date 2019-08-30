@@ -18,8 +18,6 @@ def make_header(width, height, commentchar, space, line):
 
     num_blanklines = (height - 3) // 2
 
-    print('num_blanklines {}'.format(num_blanklines))
-
     titleline = '{0}{1}{2}{3}{0}'.format(commentchar, space * leftcenterspace, line, space * rightcenterspace)
     print(endlines)
     print(blanklines * num_blanklines, end = '')
