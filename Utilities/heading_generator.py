@@ -3,9 +3,9 @@
 import argparse
 
 
-def make_header(width, height, commentchar, space, line):
+def make_header(width, height, commentchar, space, line, prefix, postfix):
     endlines = commentchar * width
-    blanklines = '{0}{1}{0}\n'.format(commentchar, space * (width - 2))
+    blanklines = '{2}{0}{1}{0}{3}\n'.format(commentchar, space * (width - 2), prefix, postfix)
 
 
     neededspace = width - 2 - len(line)
@@ -18,12 +18,12 @@ def make_header(width, height, commentchar, space, line):
 
     num_blanklines = (height - 3) // 2
 
-    titleline = '{0}{1}{2}{3}{0}'.format(commentchar, space * leftcenterspace, line, space * rightcenterspace)
-    print(endlines)
+    titleline = '{4}{0}{1}{2}{3}{0}{5}'.format(commentchar, space * leftcenterspace, line, space * rightcenterspace, prefix, postfix)
+    print(prefix + endlines + postfix)
     print(blanklines * num_blanklines, end = '')
     print(titleline)
     print(blanklines * num_blanklines, end = '')
-    print(endlines)
+    print(prefix + endlines + postfix)
 
 
 def main():
@@ -32,6 +32,8 @@ def main():
     parser.add_argument('-t', help='How many lines tall', type=int, default='3')
     parser.add_argument('-s', help='Character for spacing comments', default=' ')
     parser.add_argument('-c', help='Character for denoting comments', default='#')
+    parser.add_argument('--prefix', help='Prefix to print before each line', default='')
+    parser.add_argument('--postfix', help='Postfix to print after each line', default='')
     parser.add_argument('lines', help='Strings to make into header', nargs='+')
 
     args = parser.parse_args()
@@ -41,9 +43,11 @@ def main():
     commentchar = args.c  # commentchar
     space = args.s  # space
     lines = args.lines
+    prefix = args.prefix
+    postfix = args.postfix
 
     for line in lines:
-        make_header(width, height, commentchar, space, line)
+        make_header(width, height, commentchar, space, line, prefix, postfix)
         print('\n')
 
 
