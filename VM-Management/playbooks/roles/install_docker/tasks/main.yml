@@ -5,8 +5,8 @@
 
 - name: Update and Upgrade
   apt:
-    upgrade: true
-    update_cache: true
+    upgrade: True
+    update_cache: True
 
 - name: Upgrade Dist
   apt:
@@ -38,7 +38,7 @@
 
 - name: Update Apt and Install docker-ce
   apt:
-    update_cache: true
+    update_cache: True
     name: docker-ce
     state: latest
 

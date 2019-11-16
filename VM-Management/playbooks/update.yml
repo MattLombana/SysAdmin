@@ -7,8 +7,8 @@
   hosts:
     - unix-hosts
     - windows-hosts
-  gather_facts: true
-  become: true
+  gather_facts: True
+  become: True
   vars_files:
     - ../group_vars/all.yml
     - ../group_vars/all.local.yml

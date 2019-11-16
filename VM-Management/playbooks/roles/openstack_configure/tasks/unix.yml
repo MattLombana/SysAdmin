@@ -5,7 +5,7 @@
 
 - name: Create Unix Users
   user:
-    append: true
+    append: True
     groups: "{{ item.groups }}"
     name: "{{ item.username }}"
     password: "{{ item.password }}"

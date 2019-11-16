@@ -10,6 +10,6 @@
     groups: "{{ item.groups }}"
     name: "{{ item.username }}"
     password: "{{ item.password }}"
-    password_never_expires: true
+    password_never_expires: True
   with_items: "{{ users.windows_users }}"
 

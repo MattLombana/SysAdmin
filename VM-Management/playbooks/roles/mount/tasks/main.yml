@@ -4,7 +4,7 @@
 #
 
 - name: Create PW File
-  become: true
+  become: True
   template:
     src: pwfile.conf.j2
     dest: "{{ item.credentials.pwfile }}"
@@ -15,7 +15,7 @@
   when: item.credentials is defined
 
 - name: Mount Share
-  become: true
+  become: True
   mount:
     src: "{{ item.share }}"
     path: "{{ item.directory }}"

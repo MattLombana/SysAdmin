@@ -8,7 +8,7 @@ openstack:
       flavor: "c8.xlarge"
       key: "default-keypair"
       nics: "net-name=private-network"
-      terminate_volume: true
+      terminate_volume: True
       security_groups:
         - "default"
       floating_ip_pools:
@@ -22,7 +22,7 @@ openstack:
       flavor: "c2.small"
       key: "default-keypair"
       nics: "net-name=private-network"
-      terminate_volume: true
+      terminate_volume: True
       security_groups:
         - "default"
       floating_ip_pools:

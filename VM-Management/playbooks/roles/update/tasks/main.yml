@@ -5,15 +5,15 @@
 
 - name: Update and Upgrade Debian/Ubuntu
   apt:
-    upgrade: true
-    update_cache: true
+    upgrade: True
+    update_cache: True
   when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
 
 - name: Upgrade CentOS
   yum:
     name: '*'
     state: latest
-    update_only: true
+    update_only: True
   when: ansible_distribution == "CentOS"
 
 - name: Upgrade Fedora
@@ -37,5 +37,5 @@
       - Tools
       - UpdateRollups
       - Updates
-    reboot: true
+    reboot: True
   when: ansible_distribution == "Windows"

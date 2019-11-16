@@ -17,7 +17,7 @@
   package:
     name: "{{ item }}"
     state: present
-  become: true
+  become: True
   with_items:
     - build-essential
     - cmake

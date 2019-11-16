@@ -11,7 +11,7 @@
     nics: "{{ item.nics }}"
     image: "{{ item.image }}"
     flavor: "{{ item.flavor }}"
-    boot_from_volume: true
+    boot_from_volume: True
     security_groups: "{{ item.security_groups }}"
     floating_ip_pools: "{{ item.floating_ip_pools }}"
     terminate_volume: "{{ item.terminate_volume }}"

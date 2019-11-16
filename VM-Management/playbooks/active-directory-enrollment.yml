@@ -4,7 +4,7 @@
 #
 
 - hosts: domain-members
-  gather_facts: true
+  gather_facts: True
   vars_files:
     - ../group_vars/all.yml
     - ../group_vars/all.local.yml

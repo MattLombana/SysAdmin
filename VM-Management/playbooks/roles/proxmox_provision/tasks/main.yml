@@ -8,7 +8,7 @@
     api_user: "{{ proxmox.username }}"
     api_password: "{{ proxmox.password }}"
     api_host: "{{ proxmox.hostname }}"
-    agent: true
+    agent: True
     timeout: 600
     clone: "{{ item.image_source }}"
     name: "{{ item.name }}"
