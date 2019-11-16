@@ -1,0 +1,46 @@
+version: '3.7'
+services:
+  confluence:
+    image: atlassian/confluence-server:latest
+    container_name: confluence
+    hostname: confluence
+		networks:
+			- homelab
+    volumes:
+      - confluencedata:/var/atlassian/application-data/confluence
+    ports:
+      - '80:8090'
+      - '8091:8091'
+
+  postgresql:
+    image: postgres:latest
+    container_name: confluence_db
+    hostname: confluence_db
+    networks:
+			- homelab
+    volumes:
+      - confluencedbdata:/var/atlassian/application-data/confluence
+    environment:
+      - POSTGRES_USER=confluencedb
+      # CHANGE THE PASSWORD!
+      - POSTGRES_PASSWORD=changeme
+      - POSTGRES_DB=confluencedb
+      - POSTGRES_ENCODING=UTF8
+      - POSTGRES_COLLATE=C
+      - POSTGRES_COLLATE_TYPE=C
+
+volumes:
+	confluencedata: '/tmp/postgres'
+	confluencedbdata: '/tmp/postgres'
+
+networks:
+	private:
+  homelab:
+    driver: macvlan
+    driver_opts:
+      parent: eno1
+    ipam:
+      config:
+        - subnet: 1.2.3.0/24
+					gateway: 1.2.3.0
+          ip_range: 1.2.3.0/24
