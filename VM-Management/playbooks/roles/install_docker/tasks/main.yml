@@ -32,19 +32,19 @@
     state: present
 
 - name: Add Docker Repository
-	apt_repository:
-		repo: deb https://download.docker.com/linux/ubuntu bionic stable
-		state: present
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    state: present
 
 - name: Update Apt and Install docker-ce
-	apt:
-		update_cache: true
-		name: docker-ce
-		state: latest
+  apt:
+    update_cache: true
+    name: docker-ce
+    state: latest
 
 - name: Install Docker Python Client
-	pip:
-		name: docker
+  pip:
+    name: docker
 
 - name: Add Users to Docker Group
   user:

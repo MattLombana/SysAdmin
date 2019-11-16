@@ -13,4 +13,4 @@
     - ../group_vars/docker/docker.yml
     - ../group_vars/docker/docker.local.yml
   roles:
-    - install_docker
+    - { role: install_docker, become: yes, become_user: root, become_method: sudo}
