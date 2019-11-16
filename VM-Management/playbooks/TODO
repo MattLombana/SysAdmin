@@ -1,0 +1,15 @@
+# Create VM on proxmox
+# set up its hostname
+# Set Up a DNS record
+#
+# The rest are all if and only they are applicable:
+# Update and/or upgrade the machine
+# Join Domain
+# Configure dotfiles
+# configure sudoers
+# Add any mounts that it needs
+# Add any packages it needs
+#   Kali? Ubuntu/Debian? Fedora/CentOS?
+# Install any software that it needs
+# Configure any software that it needs
+#

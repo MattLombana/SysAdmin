@@ -8,6 +8,13 @@
   vars_files:
     - ../group_vars/all.yml
     - ../group_vars/all.local.yml
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
+    - ../group_vars/active-directory/ad.yml
+    - ../group_vars/active-directory/ad.local.yml
   roles:
-    - { role: active_directory_enrollment, become: yes, become_user: root, become_method: sudo}
+    - role: active_directory_enrollment
+      become: yes
+      become_user: root
+      become_method: sudo
 

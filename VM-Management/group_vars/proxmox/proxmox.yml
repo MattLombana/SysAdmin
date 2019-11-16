@@ -1,0 +1,19 @@
+#####################################################################################################
+#                                      Proxmox configuration                                        #
+#####################################################################################################
+proxmox:
+  username: "{{ vault_proxmox_username }}"
+  password: "{{ vault_proxmox_password }}"
+  hostname: proxmox.example.com
+  provision_list:
+    - name: examplevm
+      node: node1
+      image_source: Ubuntu-16.04-Template
+      storage: local-lvm
+      cores: 2
+      sockets: 2
+      memory: 4096
+      meta:
+        default_user: ubuntu
+        groups:
+          - proxmox_unix_hosts

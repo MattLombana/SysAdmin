@@ -1,0 +1,26 @@
+#####################################################################################################
+#                                         User configuration                                        #
+#####################################################################################################
+users:
+  unix_users:
+    - username: exampleUser1
+      # password is Password1234!
+      password: '$6$2QafErWNr1z$r1CPLPoqPjCceKxjdXQLDWS2zsOcwj8y8kAvyXihzmTSHrVEenvheFPTbmJzIbBLwLoJqYgBBZxZTFySXYg.d/'
+      groups: []
+    - username: exapleUser2
+      # password is Password1234!
+      password: '$6$2QafErWNr1z$r1CPLPoqPjCceKxjdXQLDWS2zsOcwj8y8kAvyXihzmTSHrVEenvheFPTbmJzIbBLwLoJqYgBBZxZTFySXYg.d/'
+      groups:
+        - sudo
+  windows_users:
+    - username: exampleUser3
+      password: 'Password1234!'
+      groups: []
+    - username: exampleUser4
+      password: 'Password1234!'
+      groups:
+        - "Power Users"
+    - username: exampleUser5
+      password: 'Password1234!'
+      groups:
+        - Administrators

@@ -9,5 +9,9 @@
   vars_files:
     - ../group_vars/all.yml
     - ../group_vars/all.local.yml
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
+    - ../group_vars/dns/dns.yml
+    - ../group_vars/dns/dns.local.yml
   roles:
     - insert_dns_record

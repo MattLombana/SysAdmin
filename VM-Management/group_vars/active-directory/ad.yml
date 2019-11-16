@@ -1,0 +1,12 @@
+#####################################################################################################
+#                                      Active Directory configuration                               #
+#####################################################################################################
+active_directory:
+  domain: example.com
+  realm: EXAMPLE
+  domain_controller:
+    name: dc
+    ip: 10.20.30.40
+  credentials:
+    username: "{{ vault_ad_da_username }}"
+    password: "{{ vault_ad_da_password }}"

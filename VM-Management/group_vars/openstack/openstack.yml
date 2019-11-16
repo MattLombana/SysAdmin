@@ -1,0 +1,33 @@
+#####################################################################################################
+#                                      Openstack configuration                                      #
+#####################################################################################################
+openstack:
+  provision_list:
+    - name: unixExample1
+      image: "ubuntu-cloud-16.04"
+      flavor: "c8.xlarge"
+      key: "default-keypair"
+      nics: "net-name=private-network"
+      terminate_volume: true
+      security_groups:
+        - "default"
+      floating_ip_pools:
+        - "public-network"
+      meta:
+        default_user: ubuntu
+        groups:
+          - os_unix_hosts
+    - name: windowsExample1
+      image: "Windows Server 2012 R2"
+      flavor: "c2.small"
+      key: "default-keypair"
+      nics: "net-name=private-network"
+      terminate_volume: true
+      security_groups:
+        - "default"
+      floating_ip_pools:
+        - "public-network"
+      meta:
+        default_user: Administrator
+        groups:
+          - os_windows_hosts

@@ -10,7 +10,12 @@
   vars_files:
     - ../group_vars/all.yml
     - ../group_vars/all.local.yml
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
     - ../group_vars/docker/docker.yml
     - ../group_vars/docker/docker.local.yml
   roles:
-    - { role: install_docker, become: yes, become_user: root, become_method: sudo}
+    - role: install_docker
+      become: yes
+      become_user: root
+      become_method: sudo

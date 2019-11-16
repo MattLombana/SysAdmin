@@ -1,8 +1,4 @@
 # File containing a mapping of hosts to their type
-[all:vars]
-ansible_user=administrator
-ansible_become_pass='Password1!'
-
 
 # Playbooks:
 #   - active-directory-enrollment
@@ -42,5 +38,3 @@ ansible_become_pass='Password1!'
 # Playbooks:
 #   - install_docker
 [docker-hosts]
-
-

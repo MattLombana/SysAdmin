@@ -1,0 +1,74 @@
+#####################################################################################################
+#                                     iptables configuration                                        #
+#####################################################################################################
+# Valid values
+# Action: DROP, REJECT (DROP ignores packets, REJECT sends a CONN_REFUSED)
+# protocol: tcp, udp
+# port (incoming, destination, redirect, etc.): 0..65535
+# source: network name, a hostname, a network IP address (with /mask), or a plain IP address
+# destination: network name, a hostname, a network IP address (with /mask), or a plain IP address
+iptables:
+  allow_incoming_ports:
+    # Allow new and established connections to tcp port 443
+    - protocol: tcp
+      port: 443
+  deny_incoming_ports:
+    # Drop all incoming packets to tcp port 22
+    - protocol: tcp
+      port: 22
+      action: DROP
+  redirect_incoming_ports:
+    # Redirect all incoming packets to tcp port 80 to tcp port 443
+    - protocol: tcp
+      incoming_port: 80
+      redirect_port: 443
+  allow_incoming_hosts: # List the sources
+    - 1.2.3.4 # allow all new and established connections from 1.2.3.4
+  deny_incoming_hosts:
+    # REJECT all incoming packets from 1.2.3.4
+    - source: 1.2.3.4
+      action: REJECT
+  allow_specific_incoming_connection:
+    # Allow all packets from 1.2.3.4 to udp port 53
+    - protocol: udp
+      source: 1.2.3.4
+      port: 53
+  deny_specific_incoming_connection:
+    # DROP all packets from 1.2.3.4 to udp port 53
+    - protocol: udp
+      source: 1.2.3.4
+      port: 53
+      action: DROP
+
+  allow_outgoing_ports:
+    # Allow all outgoing connections to tcp port 80
+    - protocol: tcp
+      port: 80
+  deny_outgoing_ports:
+    # Deny all outgoing connections to udp port 53
+    - protocol: udp
+      port: 53
+      action: DROP
+  redirect_outgoing_ports:
+    # Redirect all outgoing packets originally going to tcp port 80 to tcp port 443
+    - protocol: tcp
+      outgoing_port: 80
+      redirect_port: 443
+  allow_outgoing_hosts: # List the destinations
+    - 1.2.3.4 # Allow all connections to host 1.2.3.4
+  deny_outgoing_hosts:
+    # Drop all connections going to 1.2.3.4
+    - destination: 1.2.3.4
+      action: DROP
+  allow_specific_outgoing_connection:
+    # Allow all connections going to tcp port 80 on 1.2.3.4
+    - protocol: tcp
+      destination: 1.2.3.4
+      port: 80
+  deny_specific_outgoing_connection:
+    # Drop all connections going to tcp port 22 on 1.2.3.4
+    - protocol: tcp
+      destination: 1.2.3.4
+      port: 22
+      action: DROP
+

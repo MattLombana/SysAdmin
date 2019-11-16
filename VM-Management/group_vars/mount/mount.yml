@@ -1,0 +1,15 @@
+#####################################################################################################
+#                                        Mount configuration                                        #
+#####################################################################################################
+mount:
+  - share: "//fileserver.example.com/Files"
+    directory: "/mnt/Files"
+    options:
+      uid: root
+      gid: root
+      other: 'ro' # optional, can be left out or empty
+    fstype: cifs
+    credentials: # optional, can be left out
+      username: "{{ vault_mount_example_username }}"
+      password: "{{ vault_moount_example_password }}"
+      pwfile: '/root/.examplepwfile'

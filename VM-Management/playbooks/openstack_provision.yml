@@ -9,8 +9,12 @@
   vars_files:
     - ../group_vars/all.yml
     - ../group_vars/all.local.yml
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
+    - ../group_vars/openstack/openstack.yml
+    - ../group_vars/openstack/openstack.local.yml
   roles:
-    - { role: openstack_provision }
+    - openstack_provision
 
 - name: Configure Openstack Instances
   hosts:
@@ -22,8 +26,13 @@
   vars_files:
     - ../group_vars/all.yml
     - ../group_vars/all.local.yml
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
+    - ../group_vars/openstack/openstack.yml
+    - ../group_vars/openstack/openstack.local.yml
   roles:
-    - { role: openstack_configure, become: true}
+    - role: openstack_configure
+      become: True
 
 - name: Messages to user
   hosts: localhost

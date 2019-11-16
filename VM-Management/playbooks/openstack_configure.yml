@@ -1,3 +1,8 @@
+---
+#
+# Playbook to configure openstafck instances
+#
+
 - name: Configure Openstack Instances
   hosts:
     - os_unix_hosts
@@ -8,5 +13,12 @@
   vars_files:
     - ../group_vars/all.yml
     - ../group_vars/all.local.yml
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
+    - ../group_vars/openstack/openstack.yml
+    - ../group_vars/openstack/openstack.local.yml
   roles:
-    - { role: openstack_configure, become: true }
+    - role: openstack_configure
+      become: True
+      become_user: root
+      become_method: sudo
