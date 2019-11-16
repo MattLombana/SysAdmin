@@ -1,0 +1,53 @@
+---
+#
+# Task to install docker
+#
+
+- name: Update and Upgrade
+  apt:
+    upgrade: true
+    update_cache: true
+
+- name: Upgrade Dist
+  apt:
+    upgrade: dist
+
+- name: Install Prerequisites
+  apt:
+    name: "{{ item  }}"
+    state: latest
+  loop:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+    - python3
+    - python3-pip
+    - virtualenv
+    - python3-setuptools
+
+- name: Add Docker GPG Key to Apt
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+	apt_repository:
+		repo: deb https://download.docker.com/linux/ubuntu bionic stable
+		state: present
+
+- name: Update Apt and Install docker-ce
+	apt:
+		update_cache: true
+		name: docker-ce
+		state: latest
+
+- name: Install Docker Python Client
+	pip:
+		name: docker
+
+- name: Add Users to Docker Group
+  user:
+    name: "{{ item }}"
+    group: docker
+  loop: "{{ docker.users }}"

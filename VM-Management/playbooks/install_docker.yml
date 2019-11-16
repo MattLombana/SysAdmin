@@ -1,0 +1,16 @@
+---
+#
+# Playbook to install docker on an ubuntu 18.03 host
+#
+
+
+# Install Dotfiles for standard user
+- hosts: docker-hosts
+  gather_facts: true
+  vars_files:
+    - ../group_vars/all.yml
+    - ../group_vars/all.local.yml
+    - ../group_vars/docker/docker.yml
+    - ../group_vars/docker/docker.local.yml
+  roles:
+    - install_docker

@@ -37,3 +37,10 @@ ansible_become_pass='Password1!'
 # Playbooks:
 #   - configure_kali
 [kali-hosts]
+
+
+# Playbooks:
+#   - install_docker
+[docker-hosts]
+
+
