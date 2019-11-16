@@ -4,8 +4,8 @@ services:
     image: atlassian/confluence-server:latest
     container_name: confluence
     hostname: confluence
-		networks:
-			- homelab
+    networks:
+      - homelab
     volumes:
       - confluencedata:/var/atlassian/application-data/confluence
     ports:
@@ -17,7 +17,7 @@ services:
     container_name: confluence_db
     hostname: confluence_db
     networks:
-			- homelab
+      - homelab
     volumes:
       - confluencedbdata:/var/atlassian/application-data/confluence
     environment:
@@ -30,11 +30,11 @@ services:
       - POSTGRES_COLLATE_TYPE=C
 
 volumes:
-	confluencedata: '/tmp/postgres'
-	confluencedbdata: '/tmp/postgres'
+  confluencedata: '/tmp/postgres'
+  confluencedbdata: '/tmp/postgres'
 
 networks:
-	private:
+  private:
   homelab:
     driver: macvlan
     driver_opts:
@@ -42,5 +42,5 @@ networks:
     ipam:
       config:
         - subnet: 1.2.3.0/24
-					gateway: 1.2.3.0
+          gateway: 1.2.3.0
           ip_range: 1.2.3.0/24

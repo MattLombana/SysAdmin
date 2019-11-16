@@ -44,7 +44,11 @@
 
 - name: Install Docker Python Client
   pip:
-    name: docker
+    name: "{{ item }}"
+  loop:
+    - docker
+    - docker-compose
+
 
 - name: Add Users to Docker Group
   user:
