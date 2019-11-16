@@ -7,7 +7,7 @@ services:
     networks:
       - homelab
     volumes:
-      - confluencedata:/var/atlassian/application-data/confluence
+      - /tmp/confluence:/var/atlassian/application-data/confluence
     ports:
       - '80:8090'
       - '8091:8091'
@@ -19,7 +19,7 @@ services:
     networks:
       - homelab
     volumes:
-      - confluencedbdata:/var/atlassian/application-data/confluence
+      - /tmp/postgres:/var/atlassian/application-data/confluence
     environment:
       - POSTGRES_USER=confluencedb
       # CHANGE THE PASSWORD!
@@ -28,10 +28,6 @@ services:
       - POSTGRES_ENCODING=UTF8
       - POSTGRES_COLLATE=C
       - POSTGRES_COLLATE_TYPE=C
-
-volumes:
-  confluencedata: '/tmp/postgres'
-  confluencedbdata: '/tmp/postgres'
 
 networks:
   private:
