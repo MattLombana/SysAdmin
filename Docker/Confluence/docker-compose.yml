@@ -4,16 +4,22 @@ services:
     image: atlassian/confluence-server:latest
     container_name: confluence
     hostname: confluence
+    restart: on-failure
+    networks:
+      - confluencenet
+      - externalnet
     volumes:
       - /mnt/containers/confluence/confluence:/var/atlassian/application-data/confluence
-    ports:
-      - '8090:8090'
-      - '8091:8091'
+    labels:
+      - "server"
 
   postgresql:
     image: postgres:latest
     container_name: confluence_db
     hostname: confluence_db
+    restart: on-failure
+    networks:
+      - confluencenet
     volumes:
       - /mnt/containers/confluence/postgres:/var/atlassian/application-data/confluence
     environment:
@@ -24,3 +30,12 @@ services:
       - POSTGRES_ENCODING=UTF8
       - POSTGRES_COLLATE=C
       - POSTGRES_COLLATE_TYPE=C
+    labels:
+      - "database"
+
+networks:
+  confluencenet:
+    driver: bridge
+    internal: true
+  externalnet:
+    external: true
