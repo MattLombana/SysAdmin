@@ -1,46 +1,38 @@
 #! /bin/bash
 
+# Slack Notification script
 
-# Slack SSH-Notification script
-# A simple script to notify Slack when someone SSH's into a server
+# A simple script to notify Slack
 # Original Source: http://redgreenrepeat.com/2017/03/10/configuring-mail-and-slack-for-ssh-notifications/
 
-# To use this script, copy it to the target machine, and add the following line to /etc/pam.d/sshd
-#  # on any activity, execute ssh_message_slack.sh
-#  session   optional      pam_exec.so /absolute/path/to/ssh_message_slack.sh
-
-# First, ensure that this is a login event:
-if [[ "$PAM_TYPE" != "open_session"  ]]; then
-    exit 0
-fi
 
 ################################################################################
 #                              Begin Message Vars                              #
 ################################################################################
 # Global Slack Settings
 SLACK_URL="https://hooks.slack.com/services/CHANGEME"
-CHANNEL="#ssh-notifications"
-USERNAME="Login-Bot"
+CHANNEL="#virus-alerts"
+USERNAME="Virus-Bot"
 
 # Message Content Settings
 # Title
-MESSAGE_TITLE="*${PAM_SERVICE} login on* \``hostname -s`\` *for account* \`${PAM_USER}\`"
+SERVICE="ClamAV"
+MESSAGE_TITLE="*New virus event from* \`${SERVICE}\` *on* \``hostname -s`\`"
 
 # Body
-USER="User:            $PAM_USER"
-REMOTE="Remote host:     $PAM_RHOST"
-SERVICE="Service:         $PAM_SERVICE"
-TTY="TTY:             $PAM_TTY"
-DATE="Date:            `date`"
-SERVER="Server:          `uname -a`"
-MESSAGE_BODY="\`\`\`${USER}\n${REMOTE}\n${SERVICE}\n${TTY}\n${DATE}\n${SERVER}\`\`\`"
+           DATE="Date:             `date`"
+           HOST="Host:             `hostname -s`"
+         SERVER="Server:           `uname -a`"
+     VIRUS_NAME="Virus Name:       $1"
+ VIRUS_FILENAME="CLAMAV Filename:  $2"
+VIRUS_VIRUSNAME="CLAMAV VirusName: $3"
+MESSAGE_BODY="\`\`\`${DATE}\n${HOST}\n${SERVER}\n${VIRUS_NAME}\n${VIRUS_FILENAME}\n${VIRUS_VIRUSNAME}\n\`\`\`"
 
 # Level
-MESSAGE_LEVEL="INFO"
+MESSAGE_LEVEL="WARNING"
 ################################################################################
 #                               End Message Vars                               #
 ################################################################################
-
 
 SLACK_MESSAGE="${MESSAGE_TITLE}\n\n${MESSAGE_BODY}"
 
