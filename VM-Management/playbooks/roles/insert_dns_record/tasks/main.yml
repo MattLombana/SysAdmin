@@ -3,20 +3,30 @@
 # Tasks for inserting a DNS record
 #
 
-- name: Insert Forward DNS Records
+- name: Insert Forward DNS A Records
   nsupdate:
     server: "{{ dns.dns_server }}"
     zone: "{{ dns.forward_lookup_zone }}"
     record: "{{ item.name }}"
     value: "{{ item.ip }}"
     type: "A"
-  with_items: "{{ dns.records }}"
+  with_items: "{{ dns.records.A }}"
 
-- name: Insert Reverse DNS Records
+- name: Insert Reverse DNS A Records
   nsupdate:
     server: "{{ dns.dns_server }}"
     zone: "{{ dns.reverse_lookup_zone }}"
     record: "{{ '.'.join(item.ip[::-1].split('.')[:2]) }}"
     value: "{{ item.name }}.{{ dns.forward_lookup_zone }}."
     type: "PTR"
-  with_items: "{{ dns.records }}"
+  with_items: "{{ dns.records.A }}"
+
+
+- name: Insert Forward DNS CNAME Records
+  nsupdate:
+    server: "{{ dns.dns_server }}"
+    zone: "{{ dns.forward_lookup_zone }}"
+    record: "{{ item.name }}"
+    value: "{{ item.alias }}"
+    type: "CNAME"
+  with_items: "{{ dns.records.CNAME }}"

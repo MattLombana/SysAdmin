@@ -6,5 +6,9 @@ dns:
   forward_lookup_zone: "example.com"
   reverse_lookup_zone: "reverse.example.com"
   records:
-    - name: record1
-      ip: "10.20.30.40"
+    A:
+      - name: record1.example.com
+        ip: "10.20.30.40"
+    CNAME:
+      - name: record2.example.com
+        alias: record.example.com
