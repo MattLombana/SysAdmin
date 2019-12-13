@@ -8,6 +8,7 @@
 #                              Begin Message Vars                              #
 ################################################################################
 # Global Slack Settings
+# Define in an environment variable, or set here:
 SLACK_URL="https://hooks.slack.com/services/CHANGEME"
 CHANNEL="#general"
 USERNAME="Example-Bot"
