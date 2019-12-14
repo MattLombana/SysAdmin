@@ -1,40 +1,27 @@
 #! /bin/bash
 
-
-# Slack SSH-Notification script
-# A simple script to notify Slack when someone SSH's into a server
+# Slack Notification script: A simple script to notify Slack
 # Original Source: http://redgreenrepeat.com/2017/03/10/configuring-mail-and-slack-for-ssh-notifications/
 
-# To use this script, copy it to the target machine, and add the following line to /etc/pam.d/sshd
-#  # on any activity, execute ssh_message_slack.sh
-#  session   optional      pam_exec.so /absolute/path/to/ssh_message_slack.sh
-
-# First, ensure that this is a login event:
-if [[ "$PAM_TYPE" != "open_session"  ]]; then
-    exit 0
-fi
 
 ################################################################################
 #                              Begin Message Vars                              #
 ################################################################################
 # Global Slack Settings
-# Define in an environment variable, or set here:
 SLACK_URL="https://hooks.slack.com/services/CHANGEME"
-CHANNEL="#ssh-notifications"
-USERNAME="Login-Bot"
+CHANNEL="#general"
+USERNAME="Example-Bot"
 
 # Message Content Settings
 # Title
-MESSAGE_TITLE="*${PAM_SERVICE} login on* \``hostname -s`\` *for account* \`${PAM_USER}\`"
+SERVICE="Example Service"
+MESSAGE_TITLE="*Example message from* \`${SERVICE}\` *on* \``hostname -s`\`"
 
 # Body
-USER="User:            $PAM_USER"
-REMOTE="Remote host:     $PAM_RHOST"
-SERVICE="Service:         $PAM_SERVICE"
-TTY="TTY:             $PAM_TTY"
 DATE="Date:            `date`"
 SERVER="Server:          `uname -a`"
-MESSAGE_BODY="\`\`\`${USER}\n${REMOTE}\n${SERVICE}\n${TTY}\n${DATE}\n${SERVER}\`\`\`"
+HOST="Host:            `hostname -s`"
+MESSAGE_BODY="\`\`\`${DATE}\n${SERVER}\n${HOST}\`\`\`"
 
 # Level
 MESSAGE_LEVEL="INFO"

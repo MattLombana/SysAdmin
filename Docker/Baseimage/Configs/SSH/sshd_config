@@ -5,7 +5,7 @@ AllowAgentForwarding yes
 AllowStreamLocalForwarding yes
 AllowTcpForwarding yes
 # AllowUsers
-AuthenticationMethods publickey,password publickey
+AuthenticationMethods publickey
 # AuthorizedKeysCommand
 # AuthorizedKeysCommandUser
 AuthorizedKeysFile .ssh/authorized_keys
@@ -23,7 +23,7 @@ Compression yes
 # DenyGroups
 # DenyUsers
 # DisableForwarding
-ExposeAuthInfo no
+# ExposeAuthInfo
 FingerprintHash sha256
 # ForceCommand
 GatewayPorts no
@@ -42,7 +42,7 @@ IgnoreUserKnownHosts no
 # IPQoS
 KbdInteractiveAuthentication yes
 KerberosAuthentication no
-KerberosGetAFSToken no
+# KerberosGetAFSToken
 KerberosOrLocalPasswd yes
 KerberosTicketCleanup yes
 # KexAlgorithms

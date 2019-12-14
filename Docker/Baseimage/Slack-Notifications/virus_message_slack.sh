@@ -1,6 +1,8 @@
 #! /bin/bash
 
-# Slack Notification script: A simple script to notify Slack
+# Slack Notification script
+
+# A simple script to notify Slack
 # Original Source: http://redgreenrepeat.com/2017/03/10/configuring-mail-and-slack-for-ssh-notifications/
 
 
@@ -8,28 +10,29 @@
 #                              Begin Message Vars                              #
 ################################################################################
 # Global Slack Settings
-# Define in an environment variable, or set here:
 SLACK_URL="https://hooks.slack.com/services/CHANGEME"
-CHANNEL="#general"
-USERNAME="Example-Bot"
+CHANNEL="#virus-alerts"
+USERNAME="Virus-Bot"
 
 # Message Content Settings
 # Title
-SERVICE="Example Service"
-MESSAGE_TITLE="*Example message from* \`${SERVICE}\` *on* \``hostname -s`\`"
+SERVICE="ClamAV"
+MESSAGE_TITLE="*New virus event from* \`${SERVICE}\` *on* \``hostname -s`\`"
 
 # Body
-DATE="Date:            `date`"
-SERVER="Server:          `uname -a`"
-HOST="Host:            `hostname -s`"
-MESSAGE_BODY="\`\`\`${DATE}\n${SERVER}\n${HOST}\`\`\`"
+           DATE="Date:             `date`"
+           HOST="Host:             `hostname -s`"
+         SERVER="Server:           `uname -a`"
+     VIRUS_NAME="Virus Name:       $1"
+ VIRUS_FILENAME="CLAMAV Filename:  $2"
+VIRUS_VIRUSNAME="CLAMAV VirusName: $3"
+MESSAGE_BODY="\`\`\`${DATE}\n${HOST}\n${SERVER}\n${VIRUS_NAME}\n${VIRUS_FILENAME}\n${VIRUS_VIRUSNAME}\n\`\`\`"
 
 # Level
-MESSAGE_LEVEL="INFO"
+MESSAGE_LEVEL="WARNING"
 ################################################################################
 #                               End Message Vars                               #
 ################################################################################
-
 
 SLACK_MESSAGE="${MESSAGE_TITLE}\n\n${MESSAGE_BODY}"
 
