@@ -118,7 +118,7 @@ RUN useradd -ms /bin/bash -p $(openssl passwd -1 Password1234) docker && \
 ########################################
 RUN mkdir /home/docker/.ssh && \
     chown docker:docker /home/docker/.ssh && \
-    chmod 0700 /home/docker/.ssh && \
+    chmod 0700 /home/docker/.ssh
 COPY ./Configs/SSH/ssh_keys/insecure_key.pub /home/docker/.ssh/authorized_keys
 
 

@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  mlombanabaseimage:
+    build: .
+    image: mlombanabaseimage:latest
+    container_name: mlombanabaseimage
+    hostname: mlombana-baseimage
+    restart: on-failure
+    ports:
+      - "2222:22"
