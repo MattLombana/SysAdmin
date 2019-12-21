@@ -1,0 +1,42 @@
+version: '3.7'
+services:
+  snipe-it:
+    image: snipe/snipe-it:latest
+		container_name: snipe-it
+		hostname: snipe-it
+		restart: on-failure
+		networks:
+			- snipeitnet
+			- externalnet
+    env_file:
+      - ./env.local
+    ports:
+      - "80:80"
+    depends_on:
+      - snipe-it-mysql
+    labels:
+      - "server"
+
+  snipe-mysql:
+    image: mysql:5.6
+    container_name: snipe-it-mysql
+		hostname: snipe-it-mysql
+		restart: on-failure
+    networks:
+      - snipeitnet
+    expose:
+      - "3306"
+    volumes:
+      - /mnt/containers/snipe-it/:/var/lib/mysql
+    env_file:
+      - ./env.local
+    command: --default-authentication-plugin=mysql_native_password
+    labels:
+      - "database"
+
+networks:
+  snipeitnet:
+    driver: bridge
+    internal: true
+  externalnet:
+    external: true.
