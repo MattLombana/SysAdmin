@@ -1,0 +1,24 @@
+version: '3.7'
+services:
+  calibre-web:
+    image: linuxserver/calibre-web:latest
+    container_name: calibre-web
+    hostname: calibre-web
+    restart: unless-stopped
+    networks:
+      vlan10net:
+        ipv4_address: 10.10.10.130
+    volumes:
+			- /mnt/containers/calibre/web/config:/config
+			- /mnt/containers/calibre/web/library:/books
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+      - GUAC_USER=abc #optional
+      - GUAC_PASS=900150983cd24fb0d6963f7d28e17f72 #optional
+    labels:
+      - "server"
+networks:
+  vlan10net:
+    external: true

@@ -22,26 +22,35 @@ WORKDIR /
 ################################################################################
 
 ################################################################################
-#                             Install Basic Tools                              #
+#                    Update the Container and Install Tools                    #
 ################################################################################
+########################################
+#            Upgrade the OS            #
+########################################
+RUN apt-get update && apt-get upgrade -y -o Dpkg::Options::="--force-confold"
+
+########################################
+#         Install Basic Tools          #
+########################################
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
                     build-essential \
-                    curl \
-                    git \
-                    unzip \
-                    vim \
-                    wget \
-                    ruby \
-                    ruby-dev \
                     clamav-daemon \
-                    openssh-client \
+                    curl \
+                    fail2ban \
+                    git \
+                    iproute2 \
                     man \
                     net-tools \
-                    iproute2 \
                     netcat \
                     nmap \
-                    ufw
+                    openssh-client \
+                    ruby \
+                    ruby-dev \
+                    ufw \
+                    unzip \
+                    vim \
+                    wget
 
 ################################################################################
 #                                 ClamAV Setup                                 #
@@ -125,14 +134,15 @@ COPY ./Configs/SSH/ssh_keys/insecure_key.pub /home/docker/.ssh/authorized_keys
 ################################################################################
 #                                Fail2Ban Setup                                #
 ################################################################################
+COPY ./Configs/Fail2ban/fail2ban.local /etc/fail2ban/fail2ban.local
+COPY ./Configs/Fail2ban/jail.local /etc/fail2ban/jail.local
+
 ################################################################################
 #                                Firewall Setup                                #
 ################################################################################
 ################################################################################
 #                            Active Directory Setup                            #
 ################################################################################
-
-
 
 ################################################################################
 #                               General Settings                               #

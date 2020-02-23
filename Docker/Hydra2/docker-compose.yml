@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  hydra2:
+    image: linuxserver/hydra2:latest
+    container_name: hydra2
+    hostname: hydra2
+    restart: unless-stopped
+    networks:
+      vlan11net:
+        ipv4_address: 10.10.11.128
+    volumes:
+      - /mnt/containers/hydra2/config:/config
+      - /mnt/containers/hydra2/downloads:/downloads
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+    labels:
+      - "server"
+networks:
+  vlan11net:
+    external: true

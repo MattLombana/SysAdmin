@@ -3,21 +3,25 @@ services:
   confluence:
     image: atlassian/confluence-server:latest
     container_name: confluence
+    depends_on:
+      confluence_db
     hostname: confluence
-    restart: on-failure
+    restart: unless-stopped
     networks:
-      - confluencenet
-      - externalnet
+      confluencenet: {}
+      vlan10net:
+        ipv4_address: 10.10.10.128
     volumes:
       - /mnt/containers/confluence/confluence:/var/atlassian/application-data/confluence
     labels:
       - "server"
 
-  postgresql:
+  confluence-postgresql:
     image: postgres:latest
     container_name: confluence_db
     hostname: confluence_db
-    restart: on-failure
+    depends_on:
+    restart: unless-stopped
     networks:
       - confluencenet
     volumes:
@@ -37,5 +41,5 @@ networks:
   confluencenet:
     driver: bridge
     internal: true
-  externalnet:
+  vlan10net:
     external: true

@@ -1,0 +1,23 @@
+version: '3.7'
+services:
+  calibre-server:
+    image: linuxserver/calibre:latest
+    container_name: calibre-server
+    hostname: calibre-server
+    restart: unless-stopped
+    networks:
+      vlan10net:
+        ipv4_address: 10.10.10.129
+    volumes:
+			- /mnt/containers/calibre/server/config:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+      - GUAC_USER=abc #optional
+      - GUAC_PASS=900150983cd24fb0d6963f7d28e17f72 #optional
+    labels:
+      - "server"
+networks:
+  vlan10net:
+    external: true

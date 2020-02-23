@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  ombi:
+    image: linuxserver/ombi:latest
+    container_name: ombi
+    hostname: ombi
+    restart: unless-stopped
+    networks:
+      vlan11net:
+        ipv4_address: 10.10.11.129
+    volumes:
+      - /mnt/containers/ombi/:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+      #- BASE_URL=/ombi #optional
+    labels:
+      - "server"
+networks:
+  vlan11net:
+    external: true

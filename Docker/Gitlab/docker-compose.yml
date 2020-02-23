@@ -1,0 +1,24 @@
+version: '3.7'
+services:
+  web:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    hostname: gitlab
+    restart: unless-stopped
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://gitlab.example.com'
+        # Add any other gitlab.rb configuration here, each on its own line
+        # Template File: https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/files/gitlab-config-template/gitlab.rb.template
+    volumes:
+      - /mnt/containers/gitlab/config:/etc/gitlab
+      - /mnt/containers/gitlab/logs:/var/log/gitlab
+      - /mnt/containers/gitlab/data:/var/opt/gitlab
+    networks:
+      vlan10net:
+        ipv4_address: 10.10.10.130
+    labels:
+      - "server"
+networks:
+  vlan10net:
+    external: true
