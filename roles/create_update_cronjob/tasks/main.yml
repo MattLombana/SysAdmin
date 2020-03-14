@@ -1,0 +1,9 @@
+---
+# Ansible Role to create a cronjob to update the operating system
+#
+- name: Add Debian/Ubuntu Update Cronjob
+  cron:
+    name: "update and upgrade"
+    special_time: "weekly"
+    job: "apt-get update && apt-get upgrade -y"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"

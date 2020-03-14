@@ -1,0 +1,6 @@
+---
+roles:
+  - name: dev-sec.ssh-hardening
+  - name: dev-sec.os-hardening
+collections:
+  - pfsensible.core

@@ -1,0 +1,53 @@
+---
+
+- name: Disable Password Authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication no"
+    backup: yes
+    owner: root
+    group: root
+    mode: 0644
+    state: present
+  notify:
+    - Restart SSH
+
+- name: Disable Root Login
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin"
+    line: "PermitRootLogin no"
+    backup: yes
+    owner: root
+    group: root
+    mode: 0644
+    state: present
+  notify:
+    - Restart SSH
+
+- name: Disable Challenge Response Authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^ChallengeResponseAuthentication"
+    line: "ChallengeResponseAuthentication no"
+    backup: yes
+    owner: root
+    group: root
+    mode: 0644
+    state: present
+  notify:
+    - Restart SSH
+
+- name: Disable PAM Authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^UsePam"
+    line: "UsePam no"
+    backup: yes
+    owner: root
+    group: root
+    mode: 0644
+    state: present
+  notify:
+    - Restart SSH

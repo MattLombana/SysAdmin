@@ -1,0 +1,7 @@
+---
+
+- name: Provision VM
+  include_tasks: provision_vm.yml
+  with_items: "{{ vms }}"
+  loop_control:
+    loop_var: vm

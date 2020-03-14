@@ -1,0 +1,47 @@
+worker_processes 4;
+worker_rlimit_nofile 40000;
+
+events {
+    worker_connections 8192;
+}
+
+stream {
+    upstream rancher_servers_http {
+        least_conn;
+        {% for item in vms %}
+        {% if 'rancher_node' in item.groups %}
+        server {{ item.network.ip }}:80 max_fails=3 fail_timeout=5s;
+        {% endif %}
+        {% endfor %}
+    }
+    server {
+        listen 80;
+        proxy_pass rancher_servers_http;
+    }
+
+    upstream rancher_servers_https {
+        least_conn;
+        {% for item in vms %}
+        {% if 'rancher_node' in item.groups %}
+        server {{ item.network.ip }}:443 max_fails=3 fail_timeout=5s;
+        {% endif %}
+        {% endfor %}
+    }
+    server {
+        listen     443;
+        proxy_pass rancher_servers_https;
+    }
+
+    upstream rancher_servers_kubeapi {
+        least_conn;
+        {% for item in vms %}
+        {% if 'rancher_node' in item.groups %}
+        server {{ item.network.ip }}:6443 max_fails=3 fail_timeout=5s;
+        {% endif %}
+        {% endfor %}
+    }
+    server {
+        listen     6443;
+        proxy_pass rancher_servers_kubeapi;
+    }
+}

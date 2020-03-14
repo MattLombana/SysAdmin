@@ -1,0 +1,25 @@
+#! /bin/bash
+
+cat << EOF
+
+#################################################################
+#                   _    _           _   _                      #
+#                  / \  | | ___ _ __| |_| |                     #
+#                 / _ \ | |/ _ \ '__| __| |                     #
+#                / ___ \| |  __/ |  | |_|_|                     #
+#               /_/   \_\_|\___|_|   \__(_)                     #
+#################################################################
+# This computer is owned and operated by Matt Lombana's HOMELAB #
+#                                                               #
+# UNAUTHORIZED ACCESS TO THIS DEVICE IS PROHIBITED              #
+#                                                               #
+# You must have explicit, authorized permission to access or    #
+#  configure this device.                                       #
+#                                                               #
+# Unauthorized attempts and actions to access or use this       #
+#  system may result in civil and/or criminal penalties.        #
+#                                                               #
+# All activities performed on this device are logged and        #
+#  monitored.                                                   #
+#################################################################
+EOF

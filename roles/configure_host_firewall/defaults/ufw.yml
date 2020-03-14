@@ -1,0 +1,30 @@
+#####################################################################################################
+#                                     iptables configuration                                        #
+#####################################################################################################
+# Valid values
+# Action: allow, limit, deny, reject (deny ignores packets, reject sends a CONN_REFUSED)
+# Protocol: any, tcp, udp, ipv6, esp, ah, grep, igmp
+# from/to_Port (incoming, destination, redirect, etc.): 0..65535, or "any"
+# from/to_IP IP address, or "any"
+ufw:
+  ports:
+    - rule: limit
+      direction: in
+      protocol: tcp
+      port: 22
+  ips:
+    - rule: allow
+      direction: in
+      from_ip: 1.2.3.4
+  connections:
+    - rule: reject
+      direction: in
+      from_ip: 1.2.3.4
+      from_port: 80
+      to_ip: 1.2.3.4
+      to_port: 80
+      protocol: tcp
+  profiles:
+    - rule: allow
+      direction: out
+      name: OpenSSH

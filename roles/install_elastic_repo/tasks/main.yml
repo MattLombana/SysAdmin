@@ -1,0 +1,26 @@
+---
+# tasks file for install_elastic_repo
+
+- name: Check if the Elastic Repo exists
+  stat:
+    path: /etc/apt/sources.list.d/elastic-7.x.list
+  register: repo_exists
+
+- name: Import the Elastic PGP Key
+  apt_key:
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+  when: not repo_exists.stat.exists
+
+- name: Install dependencies
+  apt:
+    name: apt-transport-https
+    state: present
+  when: not repo_exists.stat.exists
+
+- name: Add the Elastic Repo
+  apt_repository:
+    repo: deb https://artifacts.elastic.co/packages/7.x/apt stable main
+    state: present
+    filename: elastic-7.x
+  when: not repo_exists.stat.exists

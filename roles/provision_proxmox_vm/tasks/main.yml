@@ -1,0 +1,11 @@
+---
+
+- name: Provision VM
+  include_tasks: provision_vm.yml
+  with_items: "{{ vms }}"
+  loop_control:
+    loop_var: vm
+
+- name: Wait for the VMs to start up
+  wait_for:
+    timeout: 120

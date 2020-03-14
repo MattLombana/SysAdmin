@@ -1,0 +1,41 @@
+---
+#
+# Playbook to install and configure collectd
+#
+
+# Bare metal machines
+- hosts: bare_metal_servers
+  gather_facts: false
+  remote_user: root
+  vars:
+    config_type: bare-metal
+  vars_files:
+    - ../group_vars/all.yml
+    - ../group_vars/all.local.yml
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
+    - ../group_vars/collectd.yml
+  roles:
+    - role: forward_collectd
+      become: yes
+      become_user: root
+      become_method: sudo
+
+# Virtual machines
+- hosts: virtual_servers
+  gather_facts: false
+  remote_user: root
+  vars:
+    config_type: virtual
+  vars_files:
+    - ../group_vars/all.yml
+    - ../group_vars/all.local.yml
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
+    - ../group_vars/collectd/collectd.yml
+    - ../group_vars/collectd/collectd.local.yml
+  roles:
+    - role: forward_collectd
+      become: yes
+      become_user: root
+      become_method: sudo

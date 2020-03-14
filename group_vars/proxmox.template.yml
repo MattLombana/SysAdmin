@@ -1,0 +1,8 @@
+#####################################################################################################
+#                                      Proxmox configuration                                        #
+#####################################################################################################
+proxmox:
+  username: "{{ vault_proxmox_username }}"
+  password: "{{ vault_proxmox_password }}"
+  hostname: proxmox.example.com
+  node: proxmoxNode

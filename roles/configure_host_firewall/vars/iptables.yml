@@ -1,0 +1,26 @@
+#####################################################################################################
+#                                     iptables configuration                                        #
+#####################################################################################################
+# Valid values
+# Action: DROP, REJECT
+# protocol: tcp, udp
+# port (incoming, destination, redirect, etc.): 0..65535
+# source: network name, a hostname, a network IP address (with /mask), or a plain IP address
+# destination: network name, a hostname, a network IP address (with /mask), or a plain IP address
+configure_iptables: false
+iptables:
+  allow_incoming_ports: []
+  deny_incoming_ports: []
+  redirect_incoming_ports: []
+  allow_incoming_hosts: []
+  deny_incoming_hosts: []
+  allow_specific_incoming_connection: []
+  deny_specific_incoming_connection: []
+  allow_outgoing_ports: []
+  deny_outgoing_ports: []
+  redirect_outgoing_ports: []
+  allow_outgoing_hosts: []
+  deny_outgoing_hosts: []
+  allow_specific_outgoing_connection: []
+  deny_specific_outgoing_connection: []
+

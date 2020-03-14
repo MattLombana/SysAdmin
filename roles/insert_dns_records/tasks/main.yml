@@ -1,0 +1,12 @@
+---
+#
+# Tasks for inserting a DNS record
+#
+
+- name: Create DNS Records From File
+  include_tasks: dns_from_file.yml
+  when: dns_from_file == true
+
+- name: Create DNS Records From VMs
+  include_tasks: dns_from_vms.yml
+  when: dns_from_vms == true

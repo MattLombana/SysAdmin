@@ -1,0 +1,15 @@
+version: '3.3'
+services:
+  mysql:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD={{ hostvars[inventory_hostname].mysql_pass }}
+      - MYSQL_DATABASE=k3s
+    labels:
+      - "database"

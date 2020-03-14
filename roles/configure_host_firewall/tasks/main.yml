@@ -1,0 +1,11 @@
+---
+
+- name: UFW Configuration
+  import_tasks: ufw.yml
+  when: ufw_from_file == true
+
+- name: UFW VM Configuration
+  import_tasks: ufw.yml
+  vars:
+    ufw: "{{ hostvars[inventory_hostname].firewall }}"
+  when: ufw_from_vms == true

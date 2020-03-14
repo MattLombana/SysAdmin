@@ -1,0 +1,17 @@
+---
+#
+# Playbook to install PiHole on an ubuntu host
+#
+
+# Install PiHole for standard user
+- hosts:
+    - pihole
+  gather_facts: false
+  vars_files:
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
+  become: true
+  become_user: root
+  become_method: sudo
+  roles:
+    - role: install_pihole

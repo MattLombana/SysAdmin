@@ -1,0 +1,9 @@
+---
+
+# TODO: Store this in HashiCorp Vault instead of a file?
+#   write it to /dev/null and save it in a var
+#   then use the hashivault_write module
+- name: Change ansible user password
+  user:
+    name: "{{ ansible_user }}"
+    password: "{{ lookup('password', '/tmp/' + inventory_hostname + ' length=30' ) | password_hash('sha512') }}"

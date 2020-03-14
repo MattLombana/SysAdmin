@@ -1,0 +1,40 @@
+---
+# tasks file for install_kibana
+
+- name: Check for existing installation
+  package_facts:
+    manager: "auto"
+
+- name: Install Kibana
+  apt:
+    name: kibana
+    state: present
+    cache_valid_time: 3600
+  when: "'kibana' not in ansible_facts.packages"
+
+- name: Configure Kibana listen addr
+  lineinfile:
+    destfile: /etc/kibana/kibana.yml
+    regexp: 'server.host'
+    line: 'server.host: 0.0.0.0'
+  when: "'kibana' not in ansible_facts.packages"
+
+  # TODO: parameterize these:
+- name: Configure ElasticSearch Hosts
+  lineinfile:
+    destfile: /etc/kibana/kibana.yml
+    regexp: 'elasticsearch.hosts'
+    line: 'elasticsearch.hosts: ["http://127.0.0.1:9200"]'
+  when: "'kibana' not in ansible_facts.packages"
+
+- name: Enable Kibana
+  systemd:
+    name: kibana
+    enabled: true
+  when: "'kibana' not in ansible_facts.packages"
+
+- name: Start Kibana
+  systemd:
+    name: kibana
+    state: started
+  when: "'kibana' not in ansible_facts.packages"

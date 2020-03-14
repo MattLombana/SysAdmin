@@ -1,0 +1,33 @@
+---
+
+#
+# Set up a Datastore for a K3s Cluster
+#
+
+#register mysql password
+- name: Generate and Register MySQL Password
+  set_fact:
+    mysql_pass: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters,digits,hexdigits') }}"
+
+- name: Create MySQL Folder
+  file:
+    path: /opt/mysql
+    state: directory
+
+#copy template over
+- name: Copy MySQL Docker-Compose Template
+  template:
+    src: docker-compose.yml.j2
+    dest: /opt/mysql/docker-compose.yml
+
+#make mysql-data
+- name: Create MySQL Data Folder
+  file:
+    path: /opt/mysql/mysql-data
+    state: directory
+
+#run docker-compose
+- name: Start MySQL Contiainer
+  community.general.docker_compose:
+    project_src: /opt/mysql
+    state: present

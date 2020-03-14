@@ -1,0 +1,15 @@
+---
+#
+#
+#
+
+- name: Add host to groups
+  add_host:
+    name: "{{ vm.name }}"
+    ansible_host: "{{ vm.network.ip }}"
+    ansible_user: "ansible"
+    groups: "{{ vm.groups + ['just_created'] }}"
+    firewall: "{{ vm.firewall }}"
+    dns_aliases: "{{ vm.dns_aliases }}"
+    mounts: "{{ vm.mounts }}"
+    vars: "{{ vm.vars }}"

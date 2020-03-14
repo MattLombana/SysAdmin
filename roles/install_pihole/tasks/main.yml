@@ -1,0 +1,38 @@
+---
+
+- name: Disable Systemd-Resolved
+  service:
+    name: systemd-resolved
+    state: stopped
+    enabled: no
+
+- name: Symlink the resolvestub
+  file:
+    path: /etc/resolv.conf
+    src: /run/systemd/resolve/resolv.conf
+    state: link
+    force: yes
+
+- name: Download PiHole Install Script
+  get_url:
+    url: https://install.pi-hole.net
+    dest: /tmp/install-pihole.sh
+
+- name: Make /etc/pihole Directory
+  file:
+    path: /etc/pihole
+    state: directory
+
+- name: Copy setupVars.conf
+  template:
+    src: setupVars.conf.j2
+    dest: /etc/pihole/setupVars.conf
+
+- name: Run Install Script
+  command: bash /tmp/install-pihole.sh --unattended
+
+# TODO: Store this in HashiCorp Vault instead of a file?
+#   write it to /dev/null and save it in a var
+#   then use the hashivault_write module
+- name: Change PiHole Password
+  command: bash pihole -a -p "{{ lookup('password', '/tmp/' + inventory_hostname + '-pihole length=30' ) | password_hash('sha512') }}"

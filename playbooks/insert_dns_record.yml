@@ -1,0 +1,19 @@
+---
+#
+# Ansible playbook to add a DNS record
+#
+
+- name: Insert DNS Record
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - ../group_vars/all.yml
+    - ../group_vars/all.local.yml
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
+    - ../group_vars/dns.yml
+  vars:
+    dns_from_file: true
+    dns_from_vms: false
+  roles:
+    - insert_dns_record

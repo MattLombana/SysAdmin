@@ -1,0 +1,21 @@
+---
+#
+# Ansible playbook to add or remove IP table rules
+#
+
+- name: Add UFW rules
+  hosts:
+    - all
+  gather_facts: true
+  vars_files:
+    - ../group_vars/all.yml
+    - ../group_vars/all.local.yml
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
+    - ../group_vars/ufw.yml
+    - ../group_vars/iptables.yml
+  vars:
+    ufw_from_file: true
+    ufw_from_vms: false
+  roles:
+    - configure_host_firewall

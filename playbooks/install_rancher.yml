@@ -1,0 +1,54 @@
+---
+#
+# Playbook to install Rancher on ubuntu 18.04 hosts
+#
+
+####################################################################################################
+#                                            Datastore                                             #
+####################################################################################################
+- hosts: rancher_datastore
+  gather_facts: False
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - install_docker
+    - install_k3s_datastore
+
+####################################################################################################
+#                                          Load Balancer                                           #
+####################################################################################################
+- hosts: rancher_load_balancer
+  gather_facts: False
+  vars_files:
+    - ../group_vars/vms.yml
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - install_docker
+    - install_k3s_load_balancer
+
+####################################################################################################
+#                                            K3s Nodes                                             #
+####################################################################################################
+- hosts: rancher_node
+  gather_facts: False
+  become: yes
+  become_user: root
+  become_method: sudo
+  vars_files:
+    - ../group_vars/dns.yml
+  roles:
+    - install_docker
+    - install_k3s_node
+
+####################################################################################################
+#                                             Rancher                                              #
+####################################################################################################
+- hosts: localhost
+  gather_facts: False
+  vars_files:
+    - ../group_vars/dns.yml
+  roles:
+    - install_rancher

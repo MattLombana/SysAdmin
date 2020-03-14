@@ -1,0 +1,24 @@
+vms:
+  - name: example-node1
+    sockets: 2
+    cores: 4
+    max_memory: 4096
+    min_memory: 2048
+    disk_size: 64
+    template_id: 9000
+    network:
+      ip: "11.22.33.44"
+      netmask: "/24"
+      gateway: "1.1.1.1"
+      vlan: 1
+    dns_aliases: []
+    firewall:
+      ports: []
+      ips: []
+      connections: []
+      profiles: []
+    mounts: []
+    vars: {}
+    groups:
+      - common
+      - example

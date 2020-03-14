@@ -1,0 +1,70 @@
+---
+# tasks file for install_elasticsearch
+
+- name: Check for existing installation
+  package_facts:
+    manager: "auto"
+
+- name: Install ElasticSearch
+  apt:
+    name: elasticsearch
+    state: present
+    cache_valid_time: 3600
+  when: "'elasticsearch' not in ansible_facts.packages"
+
+- name: Configure ElasticSearch listen addr
+  lineinfile:
+    destfile: /etc/elasticsearch/elasticsearch.yml
+    regexp: 'network.host'
+    line: 'network.host: 0.0.0.0'
+  when: "'elasticsearch' not in ansible_facts.packages"
+
+- name: Configure ElasticSearch listen port
+  lineinfile:
+    destfile: /etc/elasticsearch/elasticsearch.yml
+    regexp: 'http.port'
+    line: 'http.port: 9200'
+  when: "'elasticsearch' not in ansible_facts.packages"
+
+- name: Configure ElasticSearch Node Name
+  lineinfile:
+    destfile: /etc/elasticsearch/elasticsearch.yml
+    regexp: '#node.name: node-1'
+    line: 'node.name: node-1'
+  when: "'elasticsearch' not in ansible_facts.packages"
+
+- name: Configure ElasticSearch Master Nodes
+  lineinfile:
+    destfile: /etc/elasticsearch/elasticsearch.yml
+    line: 'cluster.initial_master_nodes: ["node-1"]'
+  when: "'elasticsearch' not in ansible_facts.packages"
+
+# TODO: Add the following lines
+# xpack:
+#   security:
+#     enabled: true
+#     authc:
+#       anonymous:
+#         roles: "superuser"
+#     transport:
+#       ssl:
+#         enabled: true
+#         key: /etc/elasticsearch/certs/node-1/node-1.key
+#         certificate: /etc/elasticsearch/certs/node-1/node-1.crt
+#         certificate_authorities:
+#           - /etc/elasticsearch/certs/ca/ca.crt
+# TODO: Configure Transport SSL: https://www.elastic.co/blog/configuring-ssl-tls-and-https-to-secure-elasticsearch-kibana-beats-and-logstash
+# TODO: Run `elasticsearch-setup-passwords` (https://www.elastic.co/guide/en/elasticsearch/reference/7.9/setup-passwords.html)
+
+
+- name: Enable ElasticSearch
+  systemd:
+    name: elasticsearch
+    enabled: true
+  when: "'elasticsearch' not in ansible_facts.packages"
+
+- name: Start ElasticSearch
+  systemd:
+    name: elasticsearch
+    state: started
+  when: "'elasticsearch' not in ansible_facts.packages"

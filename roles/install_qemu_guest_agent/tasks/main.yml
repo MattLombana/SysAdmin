@@ -1,0 +1,12 @@
+---
+
+- name: Check If The QEMU Guest Agent Is Installed
+  package_facts:
+    manager: "auto"
+
+- name: Install QEMU Guest Agent
+  apt:
+    name: qemu-guest-agent
+    state: present
+    update_cache: yes
+  when: "'qemu-guest-agent' not in ansible_facts.packages"

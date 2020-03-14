@@ -1,0 +1,20 @@
+---
+#
+# Ansible playbook to mount remote shares
+#
+
+- name: Mount Remote Shares
+  hosts:
+    - unix_hosts
+  gather_facts: false
+  vars_files:
+    - ../group_vars/all.yml
+    - ../group_vars/all.local.yml
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
+    - ../group_vars/mount.yml
+  vars:
+    mount_from_file: true
+    mount_from_vms: false
+  roles:
+    - mount_file_shares

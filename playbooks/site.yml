@@ -1,0 +1,134 @@
+---
+#
+# Ansible playbook: site.yml
+#
+# Hosts: Proxmox
+#   [X] Provision VMs
+#
+# Hosts: Just Created
+#   [X] Insert DNS Records
+#
+# Hosts: common
+#   [X] Install QEMU Guest Agent
+#   [X] Run apt-get update/upgrade/dist-upgrade
+#   [X] Create cronjob to automatically update the image
+#   [X] Configure Sudoers
+#   [ ] Harden SSH config
+#      [X] Baseline SSH Hardening
+#      [ ] Set up ssh cert authentication
+#   [X] Harden the operating system
+#   [X] Setup host firewall rules
+#   [X] Mount relevant NFS shares
+#   [X] Set SSH Message of the Day
+#   [ ] Install and Configure logging
+#   [ ] Install and Configure ClamAV
+#   [ ] Install and Configure Fail2Ban
+#   [ ] Add VM to Asset Management Tool
+#
+# Hosts: domain-members
+#   [X] Enroll in Active Directory
+#
+#### Insert Custom Roles Here
+#
+# Hosts: common
+#   [X] set_ansible_password
+#   [X] reboot the VM
+#   [!] remove_ansible_ssh_key - Can't do b/c Ansible fails without access
+#
+# Hosts: common, domain-members, etc.
+#   [X] snapshot_vms
+
+- name: Provision Proxmox Instances
+  hosts: proxmox_nodes
+  gather_facts: false
+  vars_files:
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
+    - ../group_vars/proxmox.yml
+    - ../group_vars/vms.yml
+  roles:
+    - provision_proxmox_vm
+    #- provision_proxmox_vm_test
+
+- name: Add VMs to DNS
+  hosts: just_created
+  gather_facts: false
+  vars:
+    dns_from_file: false
+    dns_from_vms: true
+  vars_files:
+    - ../group_vars/dns.yml
+  roles:
+    - insert_dns_records
+
+- name: Run Common Configuration
+  hosts: common
+  gather_facts: True
+  become: True
+  become_user: root
+  become_method: sudo
+  vars_files:
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
+    - ../group_vars/ssh.yml
+    - ../group_vars/os-hardening.yml
+  vars:
+    ufw_from_file: false
+    ufw_from_vms: true
+    mount_from_file: false
+    mount_from_vms: true
+  roles:
+    - wait_for_cloud_init
+    - install_qemu_guest_agent
+    - update_operating_system
+    - create_update_cronjob
+    - configure_sudoers
+    - dev-sec.ssh-hardening
+    - configure_host_firewall
+    - dev-sec.os-hardening
+    - configure_motd
+    - mount_file_shares
+
+#- name: Enroll Hosts in Active Directory
+  #hosts: domain_member
+  #gather_facts: True
+  #vars_files:
+    #- ../group_vars/vault.yml
+    #- ../group_vars/vault.local.yml
+  #become: True
+  #become_user: root
+  #become_method: sudo
+  #roles:
+    #- enroll_in_active_directory
+
+- name: Import PiHole Playbook
+  import_playbook: install_pihole.yml
+
+- name: Import Rancher Playbook
+  import_playbook: install_rancher.yml
+
+- name: Run Common Clean Up Tasks
+  hosts: common
+  gather_facts: false
+  become: True
+  become_user: root
+  become_method: sudo
+  roles:
+    - change_password
+    - reboot_machine
+
+- name: Create Proxmox Snapshots
+  hosts:
+    - common
+    # - domain_members
+  gather_facts: false
+  vars_files:
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
+    - ../group_vars/proxmox.yml
+  vars:
+    # Add this because half the time it picks python3, which doesn't include proxmoxer
+    ansible_python_interpreter: /usr/bin/python
+    snapshot_name: postcommon
+  roles:
+    - create_proxmox_snapshot

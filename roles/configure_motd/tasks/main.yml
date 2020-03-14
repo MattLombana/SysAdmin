@@ -1,0 +1,39 @@
+---
+
+#
+# Ansible role to configure the MOTD
+#
+
+- name: Install MOTD pre-requisites
+  apt:
+    name:
+      - update-motd
+      - figlet
+    state: present
+    cache_valid_time: 3600
+
+- name: Download MOTD scripts
+  get_url:
+    url: "{{ item }}"
+    dest: "/etc/update-motd.d/"
+    mode: '0755'
+  with_items:
+    - "https://raw.githubusercontent.com/yboetz/motd/master/10-hostname"
+    - "https://raw.githubusercontent.com/yboetz/motd/master/20-sysinfo"
+    - "https://raw.githubusercontent.com/yboetz/motd/master/20-uptime"
+    - "https://raw.githubusercontent.com/yboetz/motd/master/35-diskspace"
+
+- name: Add custom MOTD text
+  copy:
+    src: 01-legal
+    dest: "/etc/update-motd.d/01-legal"
+    mode: '0755'
+
+- name: Delete default MOTD scripts
+  file:
+    state: absent
+    path: "/etc/update-motd.d/{{ item }}"
+  with_items:
+    - "10-help-text"
+    - "50-landscape-sysinfo"
+    - "51-cloudguest"

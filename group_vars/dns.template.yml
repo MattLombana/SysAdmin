@@ -1,0 +1,14 @@
+#####################################################################################################
+#                                           DNS configuration                                       #
+#####################################################################################################
+dns:
+  dns_server: "10.20.30.40"
+  forward_lookup_zone: "example.com"
+  reverse_lookup_zone: "10.10.in-addr.arpa"
+  records:
+    A:
+      - name: example
+        ip: "1.2.3.4"
+    CNAME:
+      - name: example2
+        alias: example

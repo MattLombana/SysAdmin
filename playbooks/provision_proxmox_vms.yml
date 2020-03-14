@@ -1,0 +1,16 @@
+---
+#
+# Playbook to provision proxmox instances
+#
+
+- name: Provision Proxmox Instances
+  hosts: proxmox_nodes
+  gather_facts: false
+  vars_files:
+    - ../group_vars/all.yml
+    - ../group_vars/all.local.yml
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
+    - ../group_vars/proxmox.yml
+  roles:
+    - provision_proxmox_vm

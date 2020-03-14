@@ -1,0 +1,56 @@
+---
+# tasks file for install_logstash
+
+- name: Check for existing installation
+  package_facts:
+    manager: "auto"
+
+- name: Install Logstash Java Dependency
+  apt:
+    name: default-jre
+    state: present
+    cache_valid_time: 3600
+  when: "'logstash' not in ansible_facts.packages"
+
+- name: Install Logstash
+  apt:
+    name: logstash
+    state: present
+    cache_valid_time: 3600
+  when: "'logstash' not in ansible_facts.packages"
+
+- name: Create Logstash Pipeline Config
+  file:
+    path: /etc/logstash/conf.d/main.conf
+    state: touch
+
+# TODO: Parameterize this
+- name: Configure the Logstash Pipeline
+  blockinfile:
+    path: /etc/logstash/conf.d/main.conf
+    marker: ""
+    block: |
+      input {
+        beats {
+          port => 5044
+        }
+      }
+      output {
+        elasticsearch {
+          hosts => [
+            "127.0.0.1:9200"
+          ]
+        }
+      }
+
+- name: Enable Logstash
+  systemd:
+    name: logstash
+    enabled: true
+  when: "'logstash' not in ansible_facts.packages"
+
+- name: Start Logstash
+  systemd:
+    name: logstash
+    state: started
+  when: "'logstash' not in ansible_facts.packages"

@@ -1,0 +1,14 @@
+---
+#
+# Mount A device
+#
+
+- name: Mount from file
+  import_tasks: mount.yml
+  when: mount_from_file == true
+
+- name: Mount from VM
+  import_tasks: mount.yml
+  vars:
+    mount: "{{ hostvars[inventory_hostname].mounts }}"
+  when: mount_from_vms == true

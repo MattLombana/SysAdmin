@@ -1,11 +1,22 @@
+# Ansible-Galaxy Directories
+roles/dev-sec*
+collections/*
+
+# Ansible modules that haven't been merged yet
+roles/provision_proxmox_vm/library/proxmox_kvm.py
+
 # Ansible files
 *.retry
 
 
 # Ignore configuration files
-# All files with a .local extension will be ignored, unless it is also a template
+# All files with a .local extension (example.local.yml)
 *.local*
+# Do not ignore local file templates
 !*.local.template*
+# Ignore role vars/main.yml
+roles/*/vars/main.yml
+
 
 
 # Ignore All Openstack API files

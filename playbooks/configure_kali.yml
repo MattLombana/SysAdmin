@@ -1,0 +1,19 @@
+---
+#
+# Ansible playbook to setup and configure Kali Linux
+#
+
+# Install Dotfiles for standard user
+- hosts: kali_hosts
+  gather_facts: True
+  become: True
+  vars_files:
+    - ../group_vars/all.yml
+    - ../group_vars/all.local.yml
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
+    - ../group_vars/kali.yml
+  roles:
+    - configure_kali
+    - install_dotfiles
+    - configure_sudoers

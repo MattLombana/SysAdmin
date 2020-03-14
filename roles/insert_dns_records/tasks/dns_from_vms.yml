@@ -1,0 +1,37 @@
+---
+#
+# Tasks for inserting a DNS record
+#
+
+# machine name: inventory_hostname
+# machine ip: hostvars[inventory_hostname].ansible_host
+# CNAME aliases: hostvars[inventory_hostname].dns_aliases
+
+- name: Insert Forward DNS A Records
+  nsupdate:
+    server: "{{ dns.dns_server }}"
+    zone: "{{ dns.forward_lookup_zone }}"
+    record: "{{ inventory_hostname }}"
+    value: "{{ hostvars[inventory_hostname].ansible_host }}"
+    type: "A"
+  delegate_to: localhost
+
+- name: Insert Reverse DNS A Records
+  nsupdate:
+    server: "{{ dns.dns_server }}"
+    zone: "{{ dns.reverse_lookup_zone }}"
+    record: "{{ '.'.join(hostvars[inventory_hostname].ansible_host[::-1].split('.')[:2]) }}"
+    value: "{{ inventory_hostname }}.{{ dns.forward_lookup_zone }}."
+    type: "PTR"
+  delegate_to: localhost
+
+
+- name: Insert Forward DNS CNAME Records
+  nsupdate:
+    server: "{{ dns.dns_server }}"
+    zone: "{{ dns.forward_lookup_zone }}"
+    value: "{{ inventory_hostname }}"
+    record: "{{ item }}"
+    type: "CNAME"
+  with_items: "{{ hostvars[inventory_hostname].dns_aliases }}"
+  delegate_to: localhost

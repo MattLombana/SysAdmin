@@ -1,0 +1,36 @@
+---
+# tasks file for install_filebeats
+
+- name: Check for existing installation
+  package_facts:
+    manager: "auto"
+
+- name: Install filebeat
+  apt:
+    name: filebeat
+    state: present
+    cache_valid_time: 3600
+  when: "'filebeat' not in ansible_facts.packages"
+
+- name: Delete Original FileBeat Config
+  file:
+    path: /etc/filebeat/filebeat.yml
+    state: absent
+
+- name: Copy FileBeat Config
+  copy:
+    src: filebeat.yml
+    dest: /etc/filebeat/filebeat.yml
+  when: "'filebeat' not in ansible_facts.packages"
+
+- name: Enable FileBeat Service
+  systemd:
+    name: filebeat
+    enabled: true
+  when: "'filebeat' not in ansible_facts.packages"
+
+- name: Enable FileBeat Service
+  systemd:
+    name: filebeat
+    state: started
+  when: "'filebeat' not in ansible_facts.packages"

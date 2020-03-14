@@ -1,0 +1,19 @@
+---
+#
+# Playbook to install Splunk on an Ubuntu 18.04 host
+#
+
+# Install Splunk
+- hosts: splunk_hosts
+  gather_facts: True
+  vars_files:
+    - ../group_vars/all.yml
+    - ../group_vars/all.local.yml
+    - ../group_vars/vault.yml
+    - ../group_vars/vault.local.yml
+    - ../group_vars/splunk.yml
+  roles:
+    - role: install_splunk
+      become: yes
+      become_user: root
+      become_method: sudo

@@ -1,0 +1,74 @@
+---
+
+# Deploy rancher on a k3s cluster
+
+# On Localhost
+
+# helm repo add rancher-stable https://releases.rancher.com/server-charts/stable
+- name: Add Rancher Stable Helm Repo
+  community.kubernetes.helm_repository:
+    repo_name: rancher-stable
+    repo_url: https://releases.rancher.com/server-charts/stable
+
+# kubectl create namespace cattle-system --kubeconfig ~/.kube/config/k3s.yaml
+- name: Create cattle-system namespace
+  community.kubernetes.k8s:
+    name: cattle-system
+    kind: Namespace
+    state: present
+    kubeconfig: ~/.kube/config/ansible-k3s.yaml
+
+
+# kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.crds.yaml
+# If on OSX, you may need to run `export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES`
+# https://stackoverflow.com/questions/59664405/how-to-manage-k8s-objects-with-ansible-from-src-url-not-local-file
+- name: Install the CustomResourceDefinition resources for Cert Manager
+  community.kubernetes.k8s:
+    definition: "{{ item }}"
+    state: present
+    validate_certs: no
+    kubeconfig: ~/.kube/config/ansible-k3s.yaml
+  with_items: "{{lookup('url', 'https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.crds.yaml', split_lines=False) | from_yaml_all | list}}"
+  when: item is not none
+
+
+# kubectl create namespace cert-manager
+- name: Create cert-manager namespace
+  community.kubernetes.k8s:
+    name: cert-manager
+    kind: Namespace
+    state: present
+    kubeconfig: ~/.kube/config/ansible-k3s.yaml
+
+
+# helm repo add jetstack https://charts.jetstack.io
+- name: Add Jetstack Helm Repo
+  community.kubernetes.helm_repository:
+    repo_name: jetstack
+    repo_url: https://charts.jetstack.io
+
+# helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v0.15.0
+- name: Install Cert-Manager Chart
+  community.kubernetes.helm:
+    update_repo_cache: yes
+    release_name: cert-manager
+    chart_ref: jetstack/cert-manager
+    release_namespace: cert-manager
+    chart_version: v0.15.0
+    kubeconfig: ~/.kube/config/ansible-k3s.yaml
+
+
+# helm install rancher rancher-stable/rancher --namespace cattle-system --set hostname=CHANGEME
+- name: Install Rancher Chart
+  community.kubernetes.helm:
+    release_name: rancher
+    chart_ref: rancher-stable/rancher
+    release_namespace: cattle-system
+    release_values:
+      # load balancer hostname + dns.forward_lookup_zone - need to find out how to use the dns var in this playbook, or register it
+      hostname: "{{ hostvars[groups['rancher_load_balancer'][0]]['dns_aliases'][0] + '.' + dns.forward_lookup_zone }}"
+    kubeconfig: ~/.kube/config/ansible-k3s.yaml
+
+# kubectl -n cattle-system rollout status deploy/rancher
+- debug:
+    msg: "Check the status of the deployment with kubectl -n cattle-system rollout status deploy/rancher --kubeconfig ~/.kube/config/ansible-k3s.yaml"

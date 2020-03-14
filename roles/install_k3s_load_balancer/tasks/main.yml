@@ -1,0 +1,25 @@
+---
+
+#
+# Set up a Nginx Load Balancer for a K3s Cluster
+#
+
+- name: Make Nginx Directory
+  file:
+    path: /opt/nginx
+    state: directory
+
+- name: Copy docker-compose file
+  copy:
+    src: docker-compose.yml
+    dest: /opt/nginx/docker-compose.yml
+
+- name: Copy nginx.conf
+  template:
+    src: nginx.conf.j2
+    dest: /opt/nginx/nginx.conf
+
+- name: Start Nginx Contiainer
+  community.general.docker_compose:
+    project_src: /opt/nginx
+    state: present

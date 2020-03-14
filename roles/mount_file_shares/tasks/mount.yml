@@ -1,0 +1,60 @@
+---
+#
+# Mount A device
+#
+
+- name: Determine if NFS file shares are used
+  command: "/bin/true"
+  register: need_nfs
+  with_items: "{{ mount }}"
+  when: item.fstype == "nfs"
+
+- name: Determine if CIFS file shares are used
+  command: "/bin/true"
+  register: need_cifs
+  with_items: "{{ mount }}"
+  when: item.fstype == "cifs"
+
+- name: Install nfs-common
+  apt:
+    name: nfs-common
+    cache_valid_time: 3600
+    state: present
+  when: need_nfs.changed
+
+- name: Install cifs-utils
+  apt:
+    name: cifs-utils
+    cache_valid_time: 3600
+    state: present
+  when: need_cifs.changed
+
+- name: Create PW File
+  template:
+    src: pwfile.conf.j2
+    dest: "{{ item.credentials.pwfile }}"
+    owner: root
+    group: root
+    mode: 0600
+  with_items: "{{ mount }}"
+  when: item.credentials is defined
+
+
+- name: Mount Basic Shares (no options)
+  mount:
+    src: "{{ item.share }}"
+    path: "{{ item.directory }}"
+    fstype: "{{ item.fstype }}"
+    state: mounted
+  with_items: "{{ mount }}"
+  when: item.options is not defined
+
+- name: Mount Basic Shares (no options)
+  mount:
+    src: "{{ item.share }}"
+    path: "{{ item.directory }}"
+    opts: "{{ 'uid='+item.options.uid if item.options.uid is defined else '' }}{{ ',gid='+item.options.gid if item.options.gid is defined else '' }}{{ ',credentials='+item.credentials.pwfile if item.credentials is defined else '' }}{{ ','+item.options.other if item.options.other is defined else '' }}"
+    fstype: "{{ item.fstype }}"
+    state: mounted
+  with_items: "{{ mount }}"
+  when: item.options is defined

@@ -1,0 +1,68 @@
+---
+#
+# Tasks to add a rule to ufw
+#
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+
+- name: Set Logging
+  ufw:
+    logging: 'on'
+
+- name: Port Rules
+  ufw:
+    log: yes
+    rule: "{{ item.rule }}"
+    direction: "{{ item.direction }}"
+    proto: "{{ item.protocol }}"
+    to_port: "{{ item.port }}"
+  with_items: "{{ ufw.ports }}"
+
+- name: IP Rules
+  ufw:
+    log: yes
+    rule: "{{ item.rule }}"
+    direction: "{{ item.direction }}"
+    from_ip: '{{ item.from_ip }}'
+  with_items: "{{ ufw.ips }}"
+
+- name: Host + Port Rules
+  ufw:
+    log: yes
+    rule: "{{ item.rule }}"
+    direction: "{{ item.direction }}"
+    from_ip: "{{ item.from_ip }}"
+    from_port: "{{ item.from_port }}"
+    to_ip: "{{ item.to_ip }}"
+    to_port: "{{ item.to_port }}"
+    proto: "{{ item.protocol }}"
+  with_items: "{{ ufw.connections }}"
+
+- name: Profile Rules
+  ufw:
+    log: yes
+    rule: "{{ item.rule }}"
+    direction: "{{ item.direction }}"
+    name: "{{ item.name }}"
+  with_items: "{{ ufw.profiles }}"
+
+- name: Allow OpenSSH
+  ufw:
+    rule: allow
+    name: OpenSSH
+
+- name: Set Default Reject Incoming
+  ufw:
+    default: reject
+    direction: incoming
+
+- name: Set Default Allow Outgoing
+  ufw:
+    default: allow
+    direction: outgoing
+
+- name: Reload UFW
+  ufw:
+    state: reloaded

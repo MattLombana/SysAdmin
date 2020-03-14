@@ -1,0 +1,34 @@
+---
+
+#
+# Set up K3s nodes for a Cluster
+#
+
+# Update the conneection string in this command to point to the datastore
+# curl -sfL https://get.k3s.io | sh -s - server --datastore-endpoint="mysql://root:password@tcp(hostname:3306)/k3s"
+- name: Download the get k3s Script
+  get_url:
+    url: https://get.k3s.io
+    dest: /tmp/get_k3s.sh
+    mode: 0755
+
+- name: Execute get_k3s.sh Script
+  command: "/tmp/get_k3s.sh server --datastore-endpoint=\"mysql://root:{{ hostvars[groups['rancher_datastore'][0]]['mysql_pass'] }}@tcp({{ groups['rancher_datastore'][0] + '.' + dns.forward_lookup_zone }}:3306)/k3s\""
+
+# Copy the /etc/rancher/k3s/k3s.yaml file from a rancher node to localhost
+- name: Copy the new k3s config file
+  fetch:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: ~/.kube/config/ansible-k3s.yaml
+    flat: true
+  run_once: true
+
+- name: Edit the new k3s config file to use the rancher url
+  lineinfile:
+    regexp: "^    server: https://127.0.0.1:6443"
+    line: "    server: https://{{ hostvars[groups['rancher_load_balancer'][0]]['dns_aliases'][0] + '.' + dns.forward_lookup_zone }}:6443"
+    path: ~/.kube/config/ansible-k3s.yaml
+    state: present
+  delegate_to: localhost
+  run_once: true
+  become: no

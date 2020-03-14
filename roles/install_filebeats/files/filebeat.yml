@@ -1,0 +1,10 @@
+filebeat:
+  inputs:
+  - paths:
+      - /var/log/foo.log
+    fields: {log_type: foo}
+  - paths:
+      - /var/log/auth.log
+    fields: {log_type: access}
+output.logstash:
+  hosts: ["localhost:5044"]
