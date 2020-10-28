@@ -23,3 +23,31 @@ vault_mount_example_password: 'Password1234!'
 
 # PiHole
 vault_pihole_password: 'pihole'
+
+# Gitlab
+vault_gitlab_email_from: "gitlab@example.com"
+vault_gitlab_incoming_email_email: "gitlab@example.com"
+vault_gitlab_incoming_email_password: "S3cret"
+vault_gitlab_incoming_email_host: "mail.example.com"
+vault_gitlab_ldap_label: "example"
+vault_gitlab_ldap_host: "dc.example.com"
+vault_gitlab_ldap_bind_dn: "cn=bindUser,dc=domain,dc=com"
+vault_gitlab_ldap_password: "S3cret"
+vault_gitlab_ldap_base: "OU=Users,DC=hackingserver,DC=com"
+vault_gitlab_ldap_user_filter: "(&(objectCategory=person)(|(memberOf=cn=gitlab-users,ou=groups,dc=domain,dc=com)(memberOf=cn=gitlab-admins,ou=groups,dc=domain,dc=com)))"
+vault_gitlab_ldap_group_base: "ou=groups,dc=domain,dc=com"
+vault_gitlab_smtp_address: "mail.example.com"
+vault_gitlab_smtp_user_name: "gitlab@example.com"
+vault_gitlab_smtp_password: "S3cret"
+vault_gitlab_smtp_domain: "example.com"
+
+# Huginn
+vault_huginn_email_from_address: "huginn@example.com"
+vault_huginn_smtp_domain: "example.com"
+vault_huginn_smtp_user_name: "huginn"
+vault_huginn_smtp_password: "password"
+vault_huginn_smtp_server: "mail.example.com"
+vault_huginn_smtp_port: "25"
+vault_huginn_smtp_authentication: "plain"
+vault_huginn_smtp_enable_starttls_auto: "true"
+vault_huginn_smtp_ssl: "false"

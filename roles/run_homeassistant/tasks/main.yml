@@ -1,0 +1,23 @@
+---
+# Clone the repo
+- name: Clone Home Assistant Repo
+  git:
+    repo: https://github.com/MattLombana/App-Home-Assistant.git
+    dest: /opt/Home-Assistant
+
+# Edit the traefik host
+- name: Update the Traefik host rule
+  lineinfile:
+    path: /opt/Home-Assistant/Docker/docker-compose.yml
+    regexp: "^      - \"traefik.http.routers.homeassistant.rule=Host"
+    line: "      - \"traefik.http.routers.homeassistant.rule=Host(`{{ inventory_hostname }}.{{ domain_name }}`)\""
+
+# docker-compose up
+- name: Run docker-compose up
+  community.general.docker_compose:
+    project_src: /opt/Home-Assistant/Docker
+    build: no
+  register: hass_output
+
+# - ansible.builtin.debug:
+#     var: hass_output

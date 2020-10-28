@@ -1,0 +1,24 @@
+---
+# Clone the repo
+- name: Clone Homer Repo
+  git:
+    repo: https://github.com/MattLombana/App-Homer.git
+    dest: /opt/Homer
+
+# Edit the traefik host
+- name: Update the Traefik host rule
+  lineinfile:
+    path: /opt/Homer/Docker/docker-compose.yml
+    regexp: "^      - \"traefik.http.routers.homer.rule=Host"
+    line: "      - \"traefik.http.routers.homer.rule=Host(`{{ inventory_hostname }}.{{ domain_name }}`)\""
+
+# docker-compose up
+- name: Run docker-compose up
+  community.general.docker_compose:
+    project_src: /opt/Homer/Docker
+    build: no
+  register: homer_output
+
+# - ansible.builtin.debug:
+#     var: homer_output
+#

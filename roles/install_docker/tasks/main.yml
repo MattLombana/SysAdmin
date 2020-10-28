@@ -3,14 +3,20 @@
 # Task to install docker
 #
 
+- name: Check for existing docker installation
+  package_facts:
+    manager: "auto"
+
 - name: Update and Upgrade
   apt:
     upgrade: True
     update_cache: True
+  when: "'docker-ce' not in ansible_facts.packages"
 
 - name: Upgrade Dist
   apt:
     upgrade: dist
+  when: "'docker-ce' not in ansible_facts.packages"
 
 - name: Install Prerequisites
   apt:
@@ -25,22 +31,26 @@
     - python3-pip
     - virtualenv
     - python3-setuptools
+  when: "'docker-ce' not in ansible_facts.packages"
 
 - name: Add Docker GPG Key to Apt
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
     state: present
+  when: "'docker-ce' not in ansible_facts.packages"
 
 - name: Add Docker Repository
   apt_repository:
     repo: deb https://download.docker.com/linux/ubuntu bionic stable
     state: present
+  when: "'docker-ce' not in ansible_facts.packages"
 
 - name: Update Apt and Install docker-ce
   apt:
     update_cache: True
     name: docker-ce
     state: latest
+  when: "'docker-ce' not in ansible_facts.packages"
 
 - name: Install Docker Python Client
   pip:
@@ -48,6 +58,7 @@
   loop:
     - docker
     - docker-compose
+  when: "'docker-ce' not in ansible_facts.packages"
 
 
 - name: Add Users to Docker Group
@@ -55,3 +66,4 @@
     name: "{{ item }}"
     group: docker
   loop: "{{ docker.users }}"
+  when: "'docker-ce' not in ansible_facts.packages"

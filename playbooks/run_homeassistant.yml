@@ -1,0 +1,19 @@
+---
+#
+# Playbook to install PiHole on an ubuntu host
+#
+
+# Install PiHole for standard user
+- hosts:
+    - homeassistant
+  gather_facts: false
+  become: true
+  become_user: root
+  become_method: sudo
+  vars_files:
+    - ../group_vars/dns.yml
+    - ../group_vars/vault.local.yml
+  roles:
+    - install_docker
+    - run_traefik
+    - run_homeassistant

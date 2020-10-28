@@ -1,1 +1,2 @@
 # File used to configure settings for all hosts
+domain_name: "homelab.hackingserver.com"

@@ -65,8 +65,8 @@
     chart_ref: rancher-stable/rancher
     release_namespace: cattle-system
     release_values:
-      # load balancer hostname + dns.forward_lookup_zone - need to find out how to use the dns var in this playbook, or register it
-      hostname: "{{ hostvars[groups['rancher_load_balancer'][0]]['dns_aliases'][0] + '.' + dns.forward_lookup_zone }}"
+      # load balancer hostname + domain_name - need to find out how to use the dns var in this playbook, or register it
+      hostname: "{{ hostvars[groups['rancher_load_balancer'][0]]['dns_aliases'][0] + '.' + domain_name }}"
     kubeconfig: ~/.kube/config/ansible-k3s.yaml
 
 # kubectl -n cattle-system rollout status deploy/rancher

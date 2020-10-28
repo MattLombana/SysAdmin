@@ -38,6 +38,9 @@
 # Hosts: common, domain-members, etc.
 #   [X] snapshot_vms
 
+
+# TODO: Move the domain name to its own variable, then source that in the DNS.yml vars file
+
 - name: Provision Proxmox Instances
   hosts: proxmox_nodes
   gather_facts: false
@@ -47,8 +50,8 @@
     - ../group_vars/proxmox.yml
     - ../group_vars/vms.yml
   roles:
-    - provision_proxmox_vm
-    #- provision_proxmox_vm_test
+    #- provision_proxmox_vm
+    - provision_proxmox_vm_test
 
 - name: Add VMs to DNS
   hosts: just_created
@@ -79,15 +82,15 @@
     mount_from_vms: true
   roles:
     - wait_for_cloud_init
-    - install_qemu_guest_agent
-    - update_operating_system
-    - create_update_cronjob
-    - configure_sudoers
-    - dev-sec.ssh-hardening
-    - configure_host_firewall
-    - dev-sec.os-hardening
-    - configure_motd
-    - mount_file_shares
+    #- install_qemu_guest_agent
+    #- update_operating_system
+    #- create_update_cronjob
+    #- configure_sudoers
+    #- dev-sec.ssh-hardening
+    #- configure_host_firewall
+    #- dev-sec.os-hardening
+    #- configure_motd
+    #- mount_file_shares
 
 #- name: Enroll Hosts in Active Directory
   #hosts: domain_member
@@ -101,34 +104,63 @@
   #roles:
     #- enroll_in_active_directory
 
-- name: Import PiHole Playbook
-  import_playbook: install_pihole.yml
+#- name: Create Proxmox Snapshots
+  #hosts:
+    #- common
+    ## - domain_members
+  #gather_facts: false
+  #vars_files:
+    #- ../group_vars/vault.yml
+    #- ../group_vars/vault.local.yml
+    #- ../group_vars/proxmox.yml
+  #vars:
+    ## Add this because half the time it picks python3, which doesn't include proxmoxer
+    #ansible_python_interpreter: /usr/bin/python
+    #snapshot_name: postcommon
+  #roles:
+    #- create_proxmox_snapshot
 
-- name: Import Rancher Playbook
-  import_playbook: install_rancher.yml
+# - import_playbook: install_pihole.yml
+# - import_playbook: install_rancher.yml
+- import_playbook: run_calibre.yml
+- import_playbook: run_confluence.yml
+- import_playbook: run_cyberchef.yml
+- import_playbook: run_gitlab.yml
+- import_playbook: run_heimdall.yml
+- import_playbook: run_homeassistant.yml
+- import_playbook: run_homer.yml
+- import_playbook: run_huginn.yml
+- import_playbook: run_hydra2.yml
+- import_playbook: run_lazylibrarian.yml
+- import_playbook: run_ombi.yml
+- import_playbook: run_plex.yml
+- import_playbook: run_sabnzbd.yml
 
-- name: Run Common Clean Up Tasks
-  hosts: common
-  gather_facts: false
-  become: True
-  become_user: root
-  become_method: sudo
-  roles:
-    - change_password
-    - reboot_machine
 
-- name: Create Proxmox Snapshots
-  hosts:
-    - common
-    # - domain_members
-  gather_facts: false
-  vars_files:
-    - ../group_vars/vault.yml
-    - ../group_vars/vault.local.yml
-    - ../group_vars/proxmox.yml
-  vars:
-    # Add this because half the time it picks python3, which doesn't include proxmoxer
-    ansible_python_interpreter: /usr/bin/python
-    snapshot_name: postcommon
-  roles:
-    - create_proxmox_snapshot
+
+
+#- name: Run Common Clean Up Tasks
+  #hosts: common
+  #gather_facts: false
+  #become: True
+  #become_user: root
+  #become_method: sudo
+  #roles:
+    #- change_password
+    #- reboot_machine
+
+#- name: Create Proxmox Snapshots
+  #hosts:
+    #- common
+    ## - domain_members
+  #gather_facts: false
+  #vars_files:
+    #- ../group_vars/vault.yml
+    #- ../group_vars/vault.local.yml
+    #- ../group_vars/proxmox.yml
+  #vars:
+    ## Add this because half the time it picks python3, which doesn't include proxmoxer
+    #ansible_python_interpreter: /usr/bin/python
+    #snapshot_name: postcustom
+  #roles:
+    #- create_proxmox_snapshot

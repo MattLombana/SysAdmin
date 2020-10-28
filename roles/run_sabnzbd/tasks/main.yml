@@ -1,0 +1,31 @@
+---
+# Clone the repo
+- name: Clone Sabnzbd Repo
+  git:
+    repo: https://github.com/MattLombana/App-Sabnzbd.git
+    dest: /opt/Sabnzbd
+
+- name: Update the host_whitelist in sabnzbd.ini
+  lineinfile:
+    path: /opt/Sabnzbd/Config/sabnzbd.ini
+    regexp: "^host_whitelist"
+    line: "host_whitelist = {{ inventory_hostname }}.{{ domain_name }},"
+    owner: ansible
+    group: ansible
+
+# Edit the traefik host
+- name: Update the Traefik host rule
+  lineinfile:
+    path: /opt/Sabnzbd/Docker/docker-compose.yml
+    regexp: "^      - \"traefik.http.routers.sabnzbd.rule=Host"
+    line: "      - \"traefik.http.routers.sabnzbd.rule=Host(`{{ inventory_hostname }}.{{ domain_name }}`)\""
+
+# docker-compose up
+- name: Run docker-compose up
+  community.general.docker_compose:
+    project_src: /opt/Sabnzbd/Docker
+    build: no
+  register: sabnzbd_output
+
+# - ansible.builtin.debug:
+#     var: sabnzbd_output

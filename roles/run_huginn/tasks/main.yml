@@ -1,0 +1,107 @@
+---
+# Clone the repo
+- name: Clone Huginn Repo
+  git:
+    repo: https://github.com/MattLombana/App-Huginn.git
+    dest: /opt/Huginn
+
+- name: Delete the gitkeep file
+  file:
+    path: /opt/Huginn/Data/postgresql/.gitkeep
+    state: absent
+
+- name: Generate the postgres_password
+  set_fact:
+    huginn_pass: "{{ lookup('password', '/tmp/huginn_db.pass length=15 chars=ascii_letters,digits,hexdigits') }}"
+
+- name: Update the POSTGRES_PASSWORD env var
+  lineinfile:
+    path: /opt/Huginn/Docker/docker-compose.yml
+    regexp: "^      POSTGRES_PASSWORD: \"password\""
+    line: "      POSTGRES_PASSWORD: \"{{ huginn_pass }}\""
+
+- name: Update the HUGIN_DATABASEPASSWORD env var
+  lineinfile:
+    path: /opt/Huginn/Docker/docker-compose.yml
+    regexp: "^      HUGINN_DATABASE_PASSWORD: \"password\""
+    line: "      HUGINN_DATABASE_PASSWORD: \"{{ huginn_pass }}\""
+
+#EMAIL_FROM_ADDRESS: "huginn@example.com" # CHANGEME
+- name: Update the EMAIL_FROM_ADDRESS env var
+  lineinfile:
+    path: /opt/Huginn/Docker/docker-compose.yml
+    regexp: "^      EMAIL_FROM_ADDRESS"
+    line: "      EMAIL_FROM_ADDRESS: \"{{ vault_huginn_email_from_address }}\""
+
+#SMTP_DOMAIN: "example.com" # CHANGEME
+- name: Update the SMTP_DOMAIN env var
+  lineinfile:
+    path: /opt/Huginn/Docker/docker-compose.yml
+    regexp: "^      SMTP_DOMAIN"
+    line: "      SMTP_DOMAIN: \"{{ vault_huginn_smtp_domain }}\""
+
+#SMTP_USER_NAME: "huginn" # CHANGEME
+- name: Update the SMTP_USER_NAME env var
+  lineinfile:
+    path: /opt/Huginn/Docker/docker-compose.yml
+    regexp: "^      SMTP_USER_NAME"
+    line: "      SMTP_USER_NAME: \"{{ vault_huginn_smtp_user_name }}\""
+
+#SMTP_PASSWORD: "password" # CHANGEME
+- name: Update the SMTP_PASSWORD env var
+  lineinfile:
+    path: /opt/Huginn/Docker/docker-compose.yml
+    regexp: "^      SMTP_PASSWORD"
+    line: "      SMTP_PASSWORD: \"{{ vault_huginn_smtp_password }}\""
+
+#SMTP_SERVER: "mail.example.com" # CHANGEME
+- name: Update the SMTP_SERVER env var
+  lineinfile:
+    path: /opt/Huginn/Docker/docker-compose.yml
+    regexp: "^      SMTP_SERVER"
+    line: "      SMTP_SERVER: \"{{ vault_huginn_smtp_server }}\""
+
+#SMTP_PORT: "25" # CHANGEME
+- name: Update the SMTP_PORT env var
+  lineinfile:
+    path: /opt/Huginn/Docker/docker-compose.yml
+    regexp: "^      SMTP_PORT"
+    line: "      SMTP_PORT: \"{{ vault_huginn_smtp_port }}\""
+
+#SMTP_AUTHENTICATION: "plain" # CHANGEME
+- name: Update the SMTP_AUTHENTICATION env var
+  lineinfile:
+    path: /opt/Huginn/Docker/docker-compose.yml
+    regexp: "^      SMTP_AUTHENTICATION"
+    line: "      SMTP_AUTHENTICATION: \"{{ vault_huginn_smtp_authentication }}\""
+
+#SMTP_ENABLE_STARTTLS_AUTO: "true" # CHANGEME
+- name: Update the SMTP_ENABLE_STARTTLS_AUTO env var
+  lineinfile:
+    path: /opt/Huginn/Docker/docker-compose.yml
+    regexp: "^      SMTP_ENABLE_STARTTLS_AUTO"
+    line: "      SMTP_ENABLE_STARTTLS_AUTO: \"{{ vault_huginn_smtp_enable_starttls_auto }}\""
+
+#SMTP_SSL: "false" # CHANGEME
+- name: Update the SMTP_SSL env var
+  lineinfile:
+    path: /opt/Huginn/Docker/docker-compose.yml
+    regexp: "^      SMTP_SSL"
+    line: "      SMTP_SSL: \"{{ vault_huginn_smtp_ssl }}\""
+
+# Edit the traefik host
+- name: Update the Traefik host rule
+  lineinfile:
+    path: /opt/Huginn/Docker/docker-compose.yml
+    regexp: "^      - \"traefik.http.routers.huginn.rule=Host"
+    line: "      - \"traefik.http.routers.huginn.rule=Host(`{{ inventory_hostname }}.{{ domain_name }}`)\""
+
+# docker-compose up
+- name: Run docker-compose up
+  community.general.docker_compose:
+    project_src: /opt/Huginn/Docker
+    build: no
+  register: huginn_output
+
+# - ansible.builtin.debug:
+#     var: huginn_output

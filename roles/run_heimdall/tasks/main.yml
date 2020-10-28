@@ -1,0 +1,16 @@
+---
+# Clone the repo
+- name: Clone Heimdall Repo
+  git:
+    repo: https://github.com/MattLombana/App-Heimdall.git
+    dest: /opt/Heimdall
+
+# docker-compose up
+- name: Run docker-compose up
+  community.general.docker_compose:
+    project_src: /opt/Heimdall/Docker
+    build: no
+  register: heimdall_output
+
+# - ansible.builtin.debug:
+#     var: heimdall_output

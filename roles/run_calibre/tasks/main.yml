@@ -1,0 +1,29 @@
+---
+# Clone the repo
+- name: Clone Calibre Repo
+  git:
+    repo: https://github.com/MattLombana/App-Calibre.git
+    dest: /opt/Calibre
+
+# Delete Data/books/.gitkeep
+- name: Delete the gitkeep books line
+  file:
+    path: /opt/Calibre/Data/books/.gitkeep
+    state: absent
+
+# Edit the traefik host
+- name: Update the Traefik host rule
+  lineinfile:
+    path: /opt/Calibre/Docker/docker-compose.yml
+    regexp: "^      - \"traefik.http.routers.calibre-web.rule=Host"
+    line: "      - \"traefik.http.routers.calibre-web.rule=Host(`{{ inventory_hostname }}.{{ domain_name }}`)\""
+
+# docker-compose up
+- name: Run docker-compose up
+  community.general.docker_compose:
+    project_src: /opt/Calibre/Docker
+    build: no
+  register: calibre_output
+
+# - ansible.builtin.debug:
+#     var: calibre_output

@@ -1,0 +1,23 @@
+---
+# Clone the repo
+- name: Clone CyberChef Repo
+  git:
+    repo: https://github.com/MattLombana/App-CyberChef.git
+    dest: /opt/CyberChef
+
+# Edit the traefik host
+- name: Update the Traefik host rule
+  lineinfile:
+    path: /opt/CyberChef/Docker/docker-compose.yml
+    regexp: "^      - \"traefik.http.routers.cyberchef.rule=Host"
+    line: "      - \"traefik.http.routers.cyberchef.rule=Host(`{{ inventory_hostname }}.{{ domain_name }}`)\""
+
+# docker-compose up
+- name: Run docker-compose up
+  community.general.docker_compose:
+    project_src: /opt/CyberChef/Docker
+    build: no
+  register: cyberchef_output
+
+# - ansible.builtin.debug:
+#     var: cyberchef_output

@@ -1,0 +1,23 @@
+---
+# Clone the repo
+- name: Clone Hydra2 Repo
+  git:
+    repo: https://github.com/MattLombana/App-Hydra2.git
+    dest: /opt/Hydra2
+
+# Edit the traefik host
+- name: Update the Traefik host rule
+  lineinfile:
+    path: /opt/Hydra2/Docker/docker-compose.yml
+    regexp: "^      - \"traefik.http.routers.hydra2.rule=Host"
+    line: "      - \"traefik.http.routers.hydra2.rule=Host(`{{ inventory_hostname }}.{{ domain_name }}`)\""
+
+# docker-compose up
+- name: Run docker-compose up
+  community.general.docker_compose:
+    project_src: /opt/Hydra2/Docker
+    build: no
+  register: hydra2_output
+
+# - ansible.builtin.debug:
+#     var: hydra2_output

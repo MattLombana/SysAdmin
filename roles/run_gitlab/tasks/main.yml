@@ -1,0 +1,136 @@
+---
+# Update the SSH Port
+
+# Clone the repo
+- name: Clone Gitlab Repo
+  git:
+    repo: https://github.com/MattLombana/App-Gitlab.git
+    dest: /opt/Gitlab
+
+- name: Copy the configuration file
+  copy:
+    remote_src: true
+    src: /opt/Gitlab/Config/gitlab.rb.template
+    dest: /opt/Gitlab/Config/gitlab.rb
+
+# external_url 'https://example.com'
+- name: Update the external URL
+  lineinfile:
+    path: /opt/Gitlab/Config/gitlab.rb
+    regexp: "external_url 'https://example.com'"
+    line: "external_url 'https://{{ inventory_hostname }}.{{ domain_name }}'"
+
+# gitlab_rails['gitlab_email_from'] = 'gitlab@example.com'
+- name: Update the gitlab from email
+  lineinfile:
+    path: /opt/Gitlab/Config/gitlab.rb
+    regexp: "gitlab_email_from"
+    line: "gitlab_rails['gitlab_email_from'] = '{{ vault_gitlab_email_from }}'"
+
+# gitlab_rails['incoming_email_email'] = "gitlab@example.com"
+- name: Update the gitlab incoming email
+  lineinfile:
+    path: /opt/Gitlab/Config/gitlab.rb
+    regexp: "incoming_email_email"
+    line: "gitlab_rails['incoming_email_email'] = \"{{ vault_gitlab_incoming_email_email }}\""
+
+# gitlab_rails['incoming_email_password'] = "changeme"
+- name: Update the gitlab incoming email password
+  lineinfile:
+    path: /opt/Gitlab/Config/gitlab.rb
+    regexp: "incoming_email_password"
+    line: "gitlab_rails['incoming_email_password'] = \"{{ vault_gitlab_incoming_email_password }}\""
+
+# gitlab_rails['incoming_email_host'] = "mail.example.com"
+- name: Update the incoming email host
+  lineinfile:
+    path: /opt/Gitlab/Config/gitlab.rb
+    regexp: "incoming_email_host"
+    line: "gitlab_rails['incoming_email_host'] = \"{{ vault_gitlab_incoming_email_host }}\""
+
+# label: 'changme'
+- name: Update the LDAP label
+  lineinfile:
+    path: /opt/Gitlab/Config/gitlab.rb
+    regexp: "label: "
+    line: "  label: '{{ vault_gitlab_ldap_label }}'"
+
+# host: 'dc.example.com'
+- name: Update the LDAP DC
+  lineinfile:
+    path: /opt/Gitlab/Config/gitlab.rb
+    regexp: "^  host: "
+    line: "  host: '{{ vault_gitlab_ldap_host }}'"
+
+# bind_dn: 'cn=binduser,dc=domain,dc=com'
+- name: Update the LDAP bind_dn
+  lineinfile:
+    path: /opt/Gitlab/Config/gitlab.rb
+    regexp: "bind_dn: "
+    line: "  bind_dn: '{{ vault_gitlab_ldap_bind_dn }}'"
+
+# password: 'changeme'
+- name: Update the ldap bind password
+  lineinfile:
+    path: /opt/Gitlab/Config/gitlab.rb
+    regexp: "^  password: "
+    line: "  password: '{{ vault_gitlab_ldap_password }}'"
+
+# base: 'ou=example,dc=domain,dc=com'
+- name: Update the ldap base
+  lineinfile:
+    path: /opt/Gitlab/Config/gitlab.rb
+    regexp: "^  base: "
+    line: "  base: '{{ vault_gitlab_ldap_base }}'"
+
+# user_filter: '(&(objectcategory=person)(|(memberof=cn=gitlab-users,ou=groups,dc=domain,dc=com)(memberof=cn=gitlab-admins,ou=groups,dc=domain,dc=com)))'
+- name: Update the ldap user_filter
+  lineinfile:
+    path: /opt/Gitlab/Config/gitlab.rb
+    regexp: "user_filter: "
+    line: "  user_filter: '{{ vault_gitlab_ldap_user_filter }}'"
+
+# group_base: 'ou=gitlab,ou=groups,dc=domain,dc=com'
+- name: Update the ldap group_base
+  lineinfile:
+    path: /opt/Gitlab/Config/gitlab.rb
+    regexp: "group_base: "
+    line: "  group_base: '{{ vault_gitlab_ldap_group_base }}'"
+
+# gitlab_rails['smtp_address'] = "mail.example.com"
+- name: Update the smtp address
+  lineinfile:
+    path: /opt/Gitlab/Config/gitlab.rb
+    regexp: "smtp_address"
+    line: "gitlab_rails['smtp_address'] = \"{{ vault_gitlab_smtp_address }}\""
+
+# gitlab_rails['smtp_user_name'] = "gitlab@example.com"
+- name: Update the smtp_user_name
+  lineinfile:
+    path: /opt/Gitlab/Config/gitlab.rb
+    regexp: "smtp_user_name"
+    line: "gitlab_rails['smtp_user_name'] = \"{{ vault_gitlab_smtp_user_name }}\""
+
+# gitlab_rails['smtp_password'] = "changeme"
+- name: Update the smtp password
+  lineinfile:
+    path: /opt/Gitlab/Config/gitlab.rb
+    regexp: "smtp_password"
+    line: "gitlab_rails['smtp_password'] = \"{{ vault_gitlab_smtp_password }}\""
+
+# gitlab_rails['smtp_domain'] = "example.com"
+- name: Update the smtp domain
+  lineinfile:
+    path: /opt/Gitlab/Config/gitlab.rb
+    regexp: "smtp_domain"
+    line: "gitlab_rails['smtp_domain'] = \"{{ vault_gitlab_smtp_domain }}\""
+
+# docker-compose up
+- name: Run docker-compose up
+	community.general.docker_compose:
+		project_src: /opt/Gitlab/Docker
+		build: no
+	register: gitlab_output
+
+# - ansible.builtin.debug:
+#     var: gitlab_output

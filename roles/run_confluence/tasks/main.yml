@@ -1,0 +1,45 @@
+---
+# Clone the repo
+- name: Clone Confluence Repo
+  git:
+    repo: https://github.com/MattLombana/App-Confluence.git
+    dest: /opt/Confluence
+
+- name: Delete the gitkeep line
+  file:
+    path: /opt/Confluence/Data/postgres/.gitkeep
+    state: absent
+
+- name: Update the ATL_PROXY_NAME
+  lineinfile:
+    path: /opt/Confluence/Docker/docker-compose.yml
+    regexp: "^      - ATL_PROXY_NAME=confluence.example.com # TODO: CHANGEME"
+    line: "      - ATL_PROXY_NAME={{ inventory_hostname }}.{{ domain_name }}"
+
+- name: Generate the postgres_password
+  set_fact:
+    confluence_pass: "{{ lookup('password', '/tmp/confluence_db.pass length=15 chars=ascii_letters,digits,hexdigits') }}"
+
+- name: Update the POSTGRES_PASSWORD env var
+  lineinfile:
+    path: /opt/Confluence/Docker/docker-compose.yml
+    regexp: "^      - POSTGRES_PASSWORD=changeme # TODO: CHANGEME"
+    line: "      - POSTGRES_PASSWORD={{ confluence_pass }}"
+
+
+# Edit the traefik host
+- name: Update the Traefik host rule
+  lineinfile:
+    path: /opt/Confluence/Docker/docker-compose.yml
+    regexp: "^      - \"traefik.http.routers.confluence.rule=Host"
+    line: "      - \"traefik.http.routers.confluence.rule=Host(`{{ inventory_hostname }}.{{ domain_name }}`)\""
+
+# docker-compose up
+- name: Run docker-compose up
+  community.general.docker_compose:
+    project_src: /opt/Confluence/Docker
+    build: no
+  register: confluence_output
+
+# - ansible.builtin.debug:
+#     var: confluence_output

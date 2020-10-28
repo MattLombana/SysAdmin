@@ -1,0 +1,29 @@
+---
+# Clone the repo
+- name: Clone Traefik Repo
+  git:
+    repo: https://github.com/MattLombana/App-Traefik.git
+    dest: /opt/Traefik
+
+# Generate certificates
+- name: "Generate certificates"
+  shell:
+    chdir: /opt/Traefik
+    cmd: './Config/gen_certs.sh'
+
+# Edit the traefik host
+- name: Update the Traefik host rule
+  lineinfile:
+    path: /opt/Traefik/Docker/docker-compose.yml
+    regexp: "^      - \"traefik.http.routers.api.rule=Host"
+    line: "      - \"traefik.http.routers.api.rule=Host(`{{ inventory_hostname }}.{{ domain_name }}`)\""
+
+# docker-compose up
+- name: Run docker-compose up
+  community.general.docker_compose:
+    project_src: /opt/Traefik/Docker
+    build: no
+  register: traefik_output
+
+# - ansible.builtin.debug:
+#     var: traefik_output

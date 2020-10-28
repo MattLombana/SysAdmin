@@ -1,0 +1,23 @@
+---
+# Clone the repo
+- name: Clone Ombi Repo
+  git:
+    repo: https://github.com/MattLombana/App-Ombi.git
+    dest: /opt/Ombi
+
+# Edit the traefik host
+- name: Update the Traefik host rule
+  lineinfile:
+    path: /opt/Ombi/Docker/docker-compose.yml
+    regexp: "^      - \"traefik.http.routers.ombi.rule=Host"
+    line: "      - \"traefik.http.routers.ombi.rule=Host(`{{ inventory_hostname }}.{{ domain_name }}`)\""
+
+# docker-compose up
+- name: Run docker-compose up
+  community.general.docker_compose:
+    project_src: /opt/Ombi/Docker
+    build: no
+  register: ombi_output
+
+# - ansible.builtin.debug:
+#     var: ombi_output

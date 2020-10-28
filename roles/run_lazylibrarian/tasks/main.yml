@@ -1,0 +1,23 @@
+---
+# Clone the repo
+- name: Clone LazyLibrarian Repo
+  git:
+    repo: https://github.com/MattLombana/App-LazyLibrarian.git
+    dest: /opt/LazyLibrarian
+
+# Edit the traefik host
+- name: Update the Traefik host rule
+  lineinfile:
+    path: /opt/LazyLibrarian/Docker/docker-compose.yml
+    regexp: "^      - \"traefik.http.routers.lazylibrarian.rule=Host"
+    line: "      - \"traefik.http.routers.lazylibrarian.rule=Host(`{{ inventory_hostname }}.{{ domain_name }}`)\""
+
+# docker-compose up
+- name: Run docker-compose up
+  community.general.docker_compose:
+    project_src: /opt/LazyLibrarian/Docker
+    build: no
+  register: lazylibrarian_output
+
+# - ansible.builtin.debug:
+#     var: lazylibrarian_output

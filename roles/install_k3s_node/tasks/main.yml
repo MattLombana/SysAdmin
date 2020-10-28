@@ -13,7 +13,7 @@
     mode: 0755
 
 - name: Execute get_k3s.sh Script
-  command: "/tmp/get_k3s.sh server --datastore-endpoint=\"mysql://root:{{ hostvars[groups['rancher_datastore'][0]]['mysql_pass'] }}@tcp({{ groups['rancher_datastore'][0] + '.' + dns.forward_lookup_zone }}:3306)/k3s\""
+  command: "/tmp/get_k3s.sh server --datastore-endpoint=\"mysql://root:{{ hostvars[groups['rancher_datastore'][0]]['mysql_pass'] }}@tcp({{ groups['rancher_datastore'][0] + '.' + domain_name }}:3306)/k3s\""
 
 # Copy the /etc/rancher/k3s/k3s.yaml file from a rancher node to localhost
 - name: Copy the new k3s config file
@@ -26,7 +26,7 @@
 - name: Edit the new k3s config file to use the rancher url
   lineinfile:
     regexp: "^    server: https://127.0.0.1:6443"
-    line: "    server: https://{{ hostvars[groups['rancher_load_balancer'][0]]['dns_aliases'][0] + '.' + dns.forward_lookup_zone }}:6443"
+    line: "    server: https://{{ hostvars[groups['rancher_load_balancer'][0]]['dns_aliases'][0] + '.' + domain_name }}:6443"
     path: ~/.kube/config/ansible-k3s.yaml
     state: present
   delegate_to: localhost
